@@ -23,7 +23,7 @@
         <!-- Assembly plugin -->
         <assemblyPlugin.version>3.1.0</assemblyPlugin.version>
         <assemblyPlugin.finalName>BookManager2</assemblyPlugin.finalName>
-        <assemblyPlugin.mainClass></assemblyPlugin.mainClass>
+        <assemblyPlugin.mainClass>com.qthegamep.bookmanager2.Application</assemblyPlugin.mainClass>
         <assemblyPlugin.appendAssemblyId>false</assemblyPlugin.appendAssemblyId>
 
         <!-- JaCoCo plugin -->
