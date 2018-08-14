@@ -22,6 +22,9 @@ install:
 - cmd: SET PATH=C:\maven\apache-maven-3.5.4\bin;%JAVA_HOME%\bin;%PATH%
 - cmd: SET MAVEN_OPTS=-Dhttps.protocols=TLSv1.2
 
+before_build:
+- mvn install -P h2-database -D skipTests=true -D maven.javadoc.skip=true -B -V
+
 build_script:
 - mvn test -P h2-database -B
 
