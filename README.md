@@ -27,7 +27,7 @@ SQL scripts:
 | AppVeyor CI    | [![Build status](https://ci.appveyor.com/api/projects/status/kdujfqdassnlct0e/branch/master?svg=true)](https://ci.appveyor.com/project/qThegamEp/bookmanager2/branch/master) |
 | Codecov        | [![codecov](https://codecov.io/gh/qThegamEp/BookManager2/branch/master/graph/badge.svg)](https://codecov.io/gh/qThegamEp/BookManager2) |
 | Codacy         | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a373afe7303c4910940bdb8bfee34279)](https://www.codacy.com/app/qThegamEp/BookManager2?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=qThegamEp/BookManager2&amp;utm_campaign=Badge_Grade) |
-| Gitter         | [![Gitter](https://badges.gitter.im/qThegamEp/BookManager2.svg)](https://gitter.im/qThegamEp/BookManager2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) |
+| Gitter         | [![Gitter](https://badges.gitter.im/qThegamEp/BookManager2.svg)](https://gitter.im/qThegamEp/BookManager2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Join the chat at https://gitter.im/qThegamEp/BookManager2](https://badges.gitter.im/qThegamEp/BookManager2.svg)](https://gitter.im/qThegamEp/BookManager2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) |
 
 ## Import Information
 If you want to use this project:
