@@ -1,0 +1,43 @@
+# Project Plan
+
+## Project Structure
+* [BookManager2](https://github.com/qThegamEp/BookManager2)
+    * [src](src)
+        * [main](src/main)
+            * [java](src/main/java)
+                * [com](src/main/java/com)
+                    * [qthegamep](src/main/java/com/qthegamep)
+                        * [bookmanager2](src/main/java/com/qthegamep/bookmanager2)
+                            * [Application.java](src/main/java/com/qthegamep/bookmanager2/Application.java)
+            * [resources](src/main/resources)
+                * [db](src/main/resources/db)
+                    * [h2](src/main/resources/db/h2)
+                        * [initDB.sql](src/main/resources/db/h2/initDB.sql)
+                    * [mysql](src/main/resources/db/mysql)
+                        * [initDB.sql](src/main/resources/db/mysql/initDB.sql)
+                    * [populateDB.sql](src/main/resources/db/populateDB.sql)
+                * [logback.xml](src/main/resources/logback.xml)
+        * [test](src/test)
+            * [java](src/test/java)
+                * [com](src/test/java/com)
+                    * [qthegamep](src/test/java/com/qthegamep)
+                        * [bookmanager2](src/test/java/com/qthegamep/bookmanager2)
+                            * [testhelper](src/test/java/com/qthegamep/bookmanager2/testhelper)
+                                * [rule](src/test/java/com/qthegamep/bookmanager2/testhelper/rule)
+                                    * [Rules.java](src/test/java/com/qthegamep/bookmanager2/testhelper/rule/Rules.java)
+                                * [util](src/test/java/com/qthegamep/bookmanager2/testhelper/util)
+                                    * [IOUtil.java](src/test/java/com/qthegamep/bookmanager2/testhelper/util/IOUtil.java)
+                            * [ApplicationTest.java](src/test/java/com/qthegamep/bookmanager2/ApplicationTest.java)
+            * [resources](src/test/resources)
+                * [logback-test.xml](src/test/resources/logback-test.xml)
+    * [.appveyor.yml](.appveyor.yml)
+    * [.gitignore](.gitignore)
+    * [.travis.yml](.travis.yml)
+    * [LICENSE](LICENSE)
+    * [PLAN.md](PLAN.md)
+    * [pom.xml](pom.xml)
+    * [README.md](README.md)
+
+## Fix In Future
+
+## Bugs && Messages
