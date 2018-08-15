@@ -59,6 +59,8 @@ If you want to use this project:
 * **Log:**
     * [SLF4J](https://www.slf4j.org/)
     * [Logback](https://logback.qos.ch/)
+* **Parser:**
+    * [JAXB](https://docs.oracle.com/javase/tutorial/jaxb/)
 * **ORM:**
     * [Hibernate](http://hibernate.org/)
 * **Database:**
@@ -76,6 +78,7 @@ If you want to use this project:
     * [JCL Over SLF4J](https://mvnrepository.com/artifact/org.slf4j/jcl-over-slf4j)
     * [JUL to SLF4J](https://mvnrepository.com/artifact/org.slf4j/jul-to-slf4j)
     * [Logback](https://mvnrepository.com/artifact/ch.qos.logback/logback-classic)
+    * [JAXB](https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api)
     * [Hibernate](https://mvnrepository.com/artifact/org.hibernate/hibernate-core)
     * [MySQL JDBC](https://mvnrepository.com/artifact/mysql/mysql-connector-java)
     * [H2 JDBC](https://mvnrepository.com/artifact/com.h2database/h2)
