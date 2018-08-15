@@ -20,7 +20,7 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- This log file will be archived daily or the file size is larger than 10MB -->
-            <fileNamePattern>${LOG_PATH}/archived/${LOG_PATTERN_NAME}</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/archived/application/${LOG_PATTERN_NAME}</fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
         </rollingPolicy>
     </appender>
