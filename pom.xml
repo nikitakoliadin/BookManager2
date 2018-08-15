@@ -60,6 +60,9 @@
         <!-- Logback -->
         <logback.version>1.2.3</logback.version>
 
+        <!-- JAXB -->
+        <jaxb.version>2.3.0</jaxb.version>
+
         <!-- Hibernate -->
         <hibernate.version>5.3.4.Final</hibernate.version>
 
@@ -68,9 +71,6 @@
 
         <!-- H2 JDBC -->
         <h2.jdbc.version>1.4.197</h2.jdbc.version>
-
-        <!-- JAXB -->
-        <jaxb.version>2.3.0</jaxb.version>
     </properties>
 
     <build>
@@ -251,20 +251,20 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- ORM -->
-        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-
         <!-- Parser -->
         <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>${jaxb.version}</version>
+        </dependency>
+
+        <!-- ORM -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
     </dependencies>
 
