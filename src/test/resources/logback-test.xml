@@ -29,7 +29,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- This log file will be archived daily or the file size is larger than 10MB -->
             <fileNamePattern>
-                ${LOG_PATH}/archived/application/${LOG_PATTERN_NAME_OF_TEST_OF_APPLICATION}
+                ${LOG_PATH}/archived/test_of_application/${LOG_PATTERN_NAME_OF_TEST_OF_APPLICATION}
             </fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
         </rollingPolicy>
@@ -45,7 +45,7 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- This log file will be archived daily or the file size is larger than 10MB -->
-            <fileNamePattern>${LOG_PATH}/archived/results/${LOG_PATTERN_NAME_OF_TEST_RESULTS}</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/archived/test_results/${LOG_PATTERN_NAME_OF_TEST_RESULTS}</fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
         </rollingPolicy>
     </appender>
