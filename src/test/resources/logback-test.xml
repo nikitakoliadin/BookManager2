@@ -108,7 +108,7 @@
         <appender-ref ref="HIBERNATE_FILE_LOG"/>
     </logger>
 
-    <logger name="org.hibernate.stat" level="INFO" additivity="false">
+    <logger name="org.hibernate.stat" level="DEBUG" additivity="false">
         <appender-ref ref="HIBERNATE_FILE_LOG"/>
     </logger>
 
