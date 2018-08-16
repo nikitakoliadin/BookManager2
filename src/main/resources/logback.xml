@@ -42,7 +42,7 @@
     </appender>
 
     <!-- Root logger -->
-    <root level="info">
+    <root level="INFO">
         <appender-ref ref="ROOT_FILE"/>
     </root>
 
