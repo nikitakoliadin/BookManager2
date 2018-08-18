@@ -78,12 +78,12 @@ public class SessionUtil {
     }
 
     /**
-     * This method commit transaction if transaction was created and closes the session.
+     * This method commit transaction if transaction was created and is active and closes the session.
      */
     public void closeTransactionSession() {
         log.info("Preparing to close hibernate transaction session");
 
-        if (transaction != null) {
+        if (transaction != null && transaction.isActive()) {
             transaction.commit();
             log.info("Transaction was committed");
         } else {
@@ -120,7 +120,13 @@ public class SessionUtil {
     private void closeSessionFactory() {
         log.info("Preparing to close session factory");
 
-        SESSION_FACTORY.close();
-        log.info("Preparing to close session factory was done successful! This session factory was closed");
+        if (SESSION_FACTORY != null && !SESSION_FACTORY.isClosed()) {
+            SESSION_FACTORY.close();
+            log.info("Preparing to close session factory was done successful! This session factory was closed");
+        } else {
+            log.info("Preparing to close session factory was done successful! " +
+                    "This session factory was not closed because it was not built or it was already closed"
+            );
+        }
     }
 }
