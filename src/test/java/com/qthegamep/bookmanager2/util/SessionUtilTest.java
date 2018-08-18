@@ -3,8 +3,13 @@ package com.qthegamep.bookmanager2.util;
 import com.qthegamep.bookmanager2.testhelper.rule.Rules;
 
 import lombok.val;
+import org.junit.Before;
+import org.junit.After;
+import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
+
 import org.hibernate.Session;
-import org.junit.*;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
 
@@ -24,37 +29,35 @@ public class SessionUtilTest {
 
     private Session session;
 
+    @Before
+    public void setUp() {
+        session = SessionUtil.openSession();
+    }
+
+    @After
+    public void tearDown() {
+        SessionUtil.closeSession();
+    }
+
     @Test
     public void shouldBeNotNullSession() {
-        session = SessionUtil.openSession();
-
         assertThat(session).isNotNull();
-
-        SessionUtil.closeSession();
     }
 
     @Test
     public void shouldOpenSessionCorrectly() {
-        session = SessionUtil.openSession();
-
         assertThat(session.isOpen()).isTrue();
-
-        SessionUtil.closeSession();
     }
 
     @Test
     public void shouldBeTheSameSession() {
-        session = SessionUtil.openSession();
         val session = SessionUtil.openSession();
 
         assertThat(session).isEqualTo(this.session);
-
-        SessionUtil.closeSession();
     }
 
     @Test
     public void shouldCloseSessionCorrectly() {
-        session = SessionUtil.openSession();
         SessionUtil.closeSession();
 
         assertThat(session.isOpen()).isFalse();
@@ -62,16 +65,11 @@ public class SessionUtilTest {
 
     @Test
     public void shouldNotCloseSessionIfSessionIsNull() throws Exception {
-        session = SessionUtil.openSession();
-
         setFieldToNull("session");
-
-        SessionUtil.closeSession();
     }
 
     @Test
     public void shouldNotCloseSessionIfSessionIsClosedAlready() {
-        session = SessionUtil.openSession();
         SessionUtil.closeSession();
 
         assertThat(session.isOpen()).isFalse();
@@ -101,7 +99,6 @@ public class SessionUtilTest {
 
     @Test
     public void shouldBeTheSameTransactionSessionAndSession() {
-        session = SessionUtil.openSession();
         val transactionSession = SessionUtil.openTransactionSession();
 
         assertThat(transactionSession).isEqualTo(session);
@@ -197,6 +194,8 @@ public class SessionUtilTest {
 
         SessionUtil.shutdown();
 
+        assertThat(session.isOpen()).isFalse();
+
         setNewSessionFactory();
     }
 
@@ -210,7 +209,7 @@ public class SessionUtilTest {
     }
 
     @Test
-    public void shouldThrowIllegalStateExceptionWhenStartOneMoreTransactions() {
+    public void shouldThrowIllegalStateExceptionWhenStartOneMoreTransactionsAtTheSameTime() {
         session = SessionUtil.openTransactionSession();
 
         assertThatExceptionOfType(IllegalStateException.class).isThrownBy(
