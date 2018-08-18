@@ -85,6 +85,7 @@ If you want to use this project:
 * **Plugins:**
     * [Specifying Resource Directories](https://maven.apache.org/plugins/maven-resources-plugin/examples/resource-directory.html)
     * [Apache Maven Compiler Plugin](https://maven.apache.org/plugins/maven-compiler-plugin/)
+    * [Apache Maven Surefire Plugin](https://maven.apache.org/components/surefire/maven-surefire-plugin/)
     * [Apache Maven Assembly Plugin](http://maven.apache.org/plugins/maven-assembly-plugin/)
     * [JaCoCo Plugin](http://www.baeldung.com/jacoco)
     * [Pitest Plugin](http://pitest.org/quickstart/maven/)
