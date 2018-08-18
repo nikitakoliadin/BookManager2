@@ -120,13 +120,7 @@ public class SessionUtil {
     private void closeSessionFactory() {
         log.info("Preparing to close session factory");
 
-        if (SESSION_FACTORY != null && !SESSION_FACTORY.isClosed()) {
-            SESSION_FACTORY.close();
-            log.info("Preparing to close session factory was done successful! This session factory was closed");
-        } else {
-            log.info("Preparing to close session factory was done successful! " +
-                    "This session factory was not closed because it was not built or it was already closed"
-            );
-        }
+        SESSION_FACTORY.close();
+        log.info("Preparing to close session factory was done successful! This session factory was closed");
     }
 }
