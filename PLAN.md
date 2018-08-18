@@ -10,6 +10,8 @@
                         * [bookmanager2](src/main/java/com/qthegamep/bookmanager2)
                             * [entity](src/main/java/com/qthegamep/bookmanager2/entity)
                                 * [Book.java](src/main/java/com/qthegamep/bookmanager2/entity/Book.java)
+                            * [util](src/main/java/com/qthegamep/bookmanager2/util)
+                                * [SessionUtil.java](src/main/java/com/qthegamep/bookmanager2/util/SessionUtil.java)
                             * [Application.java](src/main/java/com/qthegamep/bookmanager2/Application.java)
             * [resources](src/main/resources)
                 * [db](src/main/resources/db)
