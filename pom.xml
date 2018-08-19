@@ -20,6 +20,9 @@
         <!-- Compiler plugin -->
         <compilerPlugin.version>3.7.0</compilerPlugin.version>
 
+        <!-- Surefire plugin -->
+        <surefirePlugin.version>2.22.0</surefirePlugin.version>
+
         <!-- Assembly plugin -->
         <assemblyPlugin.version>3.1.0</assemblyPlugin.version>
         <assemblyPlugin.finalName>BookManager2</assemblyPlugin.finalName>
@@ -60,8 +63,11 @@
         <!-- Logback -->
         <logback.version>1.2.3</logback.version>
 
-        <!-- JAXB -->
-        <jaxb.version>2.3.0</jaxb.version>
+        <!-- JAXB - API -->
+        <jaxb-api.version>2.4.0-b180725.0427</jaxb-api.version>
+
+        <!-- JAXB - runtime -->
+        <jaxb-runtime.version>2.4.0-b180725.0644</jaxb-runtime.version>
 
         <!-- Hibernate -->
         <hibernate.version>5.3.4.Final</hibernate.version>
@@ -91,6 +97,13 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
+            </plugin>
+
+            <!-- Surefire plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefirePlugin.version}</version>
             </plugin>
 
             <!-- Assembly plugin -->
@@ -256,7 +269,14 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>${jaxb.version}</version>
+            <version>${jaxb-api.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>${jaxb-runtime.version}</version>
         </dependency>
 
         <!-- ORM -->
