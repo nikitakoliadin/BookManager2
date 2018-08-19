@@ -14,7 +14,6 @@
     <properties>
         <!-- Java -->
         <java.version>1.10</java.version>
-        <argLine>--add-modules java.xml.bind</argLine>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -64,8 +63,11 @@
         <!-- Logback -->
         <logback.version>1.2.3</logback.version>
 
-        <!-- JAXB -->
-        <jaxb.version>2.3.0</jaxb.version>
+        <!-- JAXB - API -->
+        <jaxb-api.version>2.3.0</jaxb-api.version>
+
+        <!-- JAXB - runtime -->
+        <jaxb-runtime.version>2.3.0.1</jaxb-runtime.version>
 
         <!-- Hibernate -->
         <hibernate.version>5.3.4.Final</hibernate.version>
@@ -267,7 +269,14 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>${jaxb.version}</version>
+            <version>${jaxb-api.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>${jaxb-runtime.version}</version>
         </dependency>
 
         <!-- ORM -->
