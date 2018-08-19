@@ -64,10 +64,10 @@
         <logback.version>1.2.3</logback.version>
 
         <!-- JAXB - API -->
-        <jaxb-api.version>2.3.0</jaxb-api.version>
+        <jaxb-api.version>2.4.0-b180725.0427</jaxb-api.version>
 
         <!-- JAXB - runtime -->
-        <jaxb-runtime.version>2.3.0.1</jaxb-runtime.version>
+        <jaxb-runtime.version>2.4.0-b180725.0644</jaxb-runtime.version>
 
         <!-- Hibernate -->
         <hibernate.version>5.3.4.Final</hibernate.version>
