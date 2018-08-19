@@ -66,6 +66,8 @@ public class SessionUtilTest {
     @Test
     public void shouldNotCloseSessionIfSessionIsNull() throws Exception {
         setFieldToNull("session");
+
+        assertThat(session.isOpen()).isTrue();
     }
 
     @Test
@@ -131,6 +133,8 @@ public class SessionUtilTest {
         session = SessionUtil.openTransactionSession();
 
         setFieldToNull("transaction");
+
+        assertThat(session.isOpen()).isTrue();
 
         SessionUtil.closeTransactionSession();
     }
