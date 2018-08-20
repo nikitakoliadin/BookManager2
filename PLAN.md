@@ -10,6 +10,7 @@
                         * [bookmanager2](src/main/java/com/qthegamep/bookmanager2)
                             * [dao](src/main/java/com/qthegamep/bookmanager2/dao)
                                 * [BookDAO.java](src/main/java/com/qthegamep/bookmanager2/dao/BookDAO.java)
+                                * [BookDAOImpl.java](src/main/java/com/qthegamep/bookmanager2/dao/BookDAOImpl.java)
                             * [entity](src/main/java/com/qthegamep/bookmanager2/entity)
                                 * [Book.java](src/main/java/com/qthegamep/bookmanager2/entity/Book.java)
                             * [util](src/main/java/com/qthegamep/bookmanager2/util)
