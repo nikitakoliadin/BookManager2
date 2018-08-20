@@ -38,6 +38,7 @@
                                     * [Rules.java](src/test/java/com/qthegamep/bookmanager2/testhelper/rule/Rules.java)
                                 * [util](src/test/java/com/qthegamep/bookmanager2/testhelper/util)
                                     * [IOUtil.java](src/test/java/com/qthegamep/bookmanager2/testhelper/util/IOUtil.java)
+                                    * [ResetDBUtil.java](src/test/java/com/qthegamep/bookmanager2/testhelper/util/ResetDBUtil.java)
                             * [util](src/test/java/com/qthegamep/bookmanager2/util)
                                 * [SessionUtilTest.java](src/test/java/com/qthegamep/bookmanager2/util/SessionUtilTest.java)
                             * [ApplicationTest.java](src/test/java/com/qthegamep/bookmanager2/ApplicationTest.java)
