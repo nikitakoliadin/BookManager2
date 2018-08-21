@@ -1,8 +1,10 @@
 package com.qthegamep.bookmanager2.dao;
 
 import com.qthegamep.bookmanager2.entity.Book;
+import com.qthegamep.bookmanager2.util.SessionUtil;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 import java.util.List;
 
@@ -20,7 +22,34 @@ public class BookDAOImpl implements BookDAO {
      */
     @Override
     public void add(Book book) {
+        log.info("Preparing to execute CREATE CRUD operation");
 
+        val session = SessionUtil.openTransactionSession();
+
+        try {
+            log.info("Preparing to add entity! Entity to add: NAME = {}, AUTHOR = {}, PRINT_YEAR  = {}, IS_READ = {}",
+                    book.getName(),
+                    book.getAuthor(),
+                    book.getPrintYear(),
+                    book.isRead()
+            );
+
+            session.save(book);
+            log.info("Preparing to add entity was done successful");
+
+            SessionUtil.closeTransactionSession();
+            log.info("Entity was added to the database");
+        } catch (Exception e) {
+            log.info("Preparing to rollback");
+
+            session.getTransaction().rollback();
+            log.info("Preparing to rollback was done successful! Exception message: [{}]",
+                    e.getMessage(),
+                    e
+            );
+        }
+
+        log.info("Preparing to execute CREATE CRUD operation was done successful");
     }
 
     /**
