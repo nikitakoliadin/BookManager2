@@ -60,7 +60,29 @@ public class BookDAOImpl implements BookDAO {
      */
     @Override
     public void addAll(List<? extends Book> books) {
+        log.info("Preparing to execute CREATE CRUD operation");
 
+        val session = SessionUtil.openTransactionSession();
+
+        try {
+            log.info("Preparing to add list of entities! Entities: {}", books);
+
+            books.forEach(session::save);
+            log.info("Preparing to add list of entities was done successful");
+
+            SessionUtil.closeTransactionSession();
+            log.info("All entities was added to the database");
+        } catch (Exception e) {
+            log.info("Preparing to rollback");
+
+            session.getTransaction().rollback();
+            log.info("Preparing to rollback was done successful! Exception message: [{}]",
+                    e.getMessage(),
+                    e
+            );
+        }
+
+        log.info("Preparing to execute CREATE CRUD operation was done successful");
     }
 
     /**
