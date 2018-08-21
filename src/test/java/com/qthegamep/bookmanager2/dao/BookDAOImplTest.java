@@ -89,10 +89,43 @@ public class BookDAOImplTest {
         assertThat(allEntitiesFromTheDatabase).isEmpty();
     }
 
+    @Test
+    public void shouldAddEntityToTheDatabaseCorrectly() {
+        bookDAO.add(firstBook);
+
+        var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(1).contains(firstBook);
+
+        bookDAO.add(secondBook);
+
+        allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+    }
+
+    @Test
+    public void shouldRollbackAddMethodWhenEntityIsIncorrect() {
+        secondBook.setName(null);
+
+        bookDAO.add(secondBook);
+
+        val allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().isEmpty();
+    }
+
+    @Test
+    public void shouldBeCloseSessionAfterAddMethod() {
+        bookDAO.add(firstBook);
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
     private List<Book> getAllEntitiesFromTheDatabase() {
         session = SessionUtil.openTransactionSession();
 
-        val bookList = session.createQuery("from Book").list();
+        val bookList = session.createQuery("from Book", Book.class).list();
 
         SessionUtil.closeTransactionSession();
 
