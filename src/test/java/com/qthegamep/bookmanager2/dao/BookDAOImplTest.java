@@ -105,7 +105,7 @@ public class BookDAOImplTest {
     }
 
     @Test
-    public void shouldRollbackAddMethodWhenEntityIsIncorrect() {
+    public void shouldRollbackAddMethodWhenInputParameterIsIncorrect() {
         secondBook.setName(null);
 
         bookDAO.add(secondBook);
@@ -118,6 +118,45 @@ public class BookDAOImplTest {
     @Test
     public void shouldBeCloseSessionAfterAddMethod() {
         bookDAO.add(firstBook);
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
+    @Test
+    public void shouldAddAllEntitiesToTheDatabaseCorrectly() {
+        bookDAO.addAll(books);
+
+        var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+
+        bookDAO.addAll(books);
+
+        allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        val thirdBook = firstBook;
+        val fourthBook = secondBook;
+
+        thirdBook.setId(3);
+        fourthBook.setId(4);
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(4).contains(firstBook, secondBook, thirdBook, fourthBook);
+    }
+
+    @Test
+    public void shouldRollbackAddAllMethodWhenInputParameterIsIncorrect() {
+        books.get(1).setName(null);
+
+        bookDAO.addAll(books);
+
+        val allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().isEmpty();
+    }
+
+    @Test
+    public void shouldBeCloseSessionAfterAddAllMethod() {
+        bookDAO.addAll(books);
 
         assertThat(session.isOpen()).isFalse();
     }
