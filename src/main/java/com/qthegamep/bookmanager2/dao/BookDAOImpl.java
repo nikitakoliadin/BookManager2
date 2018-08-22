@@ -210,7 +210,23 @@ public class BookDAOImpl implements BookDAO {
      */
     @Override
     public List<Book> getByIsRead(boolean isRead) {
-        return null;
+        log.info("Preparing to execute READ CRUD operation");
+
+        val session = SessionUtil.openTransactionSession();
+
+        log.info("Preparing to get entity from the database by isRead = [{}]", isRead);
+
+        val books = session.createQuery("from Book where isRead = :isRead", Book.class)
+                .setParameter("isRead", isRead)
+                .list();
+        log.info("Gotten entities: {}", books);
+
+        SessionUtil.closeTransactionSession();
+        log.info("Preparing to get entity from the database by isRead was done successful");
+
+        log.info("Preparing to execute READ CRUD operation was done successful");
+
+        return books;
     }
 
     /**
