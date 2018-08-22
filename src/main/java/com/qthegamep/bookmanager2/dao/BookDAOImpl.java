@@ -130,7 +130,7 @@ public class BookDAOImpl implements BookDAO {
 
         val session = SessionUtil.openTransactionSession();
 
-        log.info("Preparing to get entity from the database by name = [{}]", name);
+        log.info("Preparing to get list of entities from the database by name = [{}]", name);
 
         val books = session.createQuery("from Book where name = :name", Book.class)
                 .setParameter("name", name)
@@ -138,7 +138,7 @@ public class BookDAOImpl implements BookDAO {
         log.info("Gotten entities: {}", books);
 
         SessionUtil.closeTransactionSession();
-        log.info("Preparing to get entity from the database by name was done successful");
+        log.info("Preparing to get list of entities from the database by name was done successful");
 
         log.info("Preparing to execute READ CRUD operation was done successful");
 
@@ -158,7 +158,7 @@ public class BookDAOImpl implements BookDAO {
 
         val session = SessionUtil.openTransactionSession();
 
-        log.info("Preparing to get entity from the database by author = [{}]", author);
+        log.info("Preparing to get list of entities from the database by author = [{}]", author);
 
         val books = session.createQuery("from Book where author = :author", Book.class)
                 .setParameter("author", author)
@@ -166,7 +166,7 @@ public class BookDAOImpl implements BookDAO {
         log.info("Gotten entities: {}", books);
 
         SessionUtil.closeTransactionSession();
-        log.info("Preparing to get entity from the database by author was done successful");
+        log.info("Preparing to get list of entities from the database by author was done successful");
 
         log.info("Preparing to execute READ CRUD operation was done successful");
 
@@ -186,7 +186,7 @@ public class BookDAOImpl implements BookDAO {
 
         val session = SessionUtil.openTransactionSession();
 
-        log.info("Preparing to get entity from the database by printYear = [{}]", printYear);
+        log.info("Preparing to get list of entities from the database by printYear = [{}]", printYear);
 
         val books = session.createQuery("from Book where printYear = :printYear", Book.class)
                 .setParameter("printYear", printYear)
@@ -194,7 +194,7 @@ public class BookDAOImpl implements BookDAO {
         log.info("Gotten entities: {}", books);
 
         SessionUtil.closeTransactionSession();
-        log.info("Preparing to get entity from the database by printYear was done successful");
+        log.info("Preparing to get list of entities from the database by printYear was done successful");
 
         log.info("Preparing to execute READ CRUD operation was done successful");
 
@@ -214,7 +214,7 @@ public class BookDAOImpl implements BookDAO {
 
         val session = SessionUtil.openTransactionSession();
 
-        log.info("Preparing to get entity from the database by isRead = [{}]", isRead);
+        log.info("Preparing to get list of entities from the database by isRead = [{}]", isRead);
 
         val books = session.createQuery("from Book where isRead = :isRead", Book.class)
                 .setParameter("isRead", isRead)
@@ -222,7 +222,7 @@ public class BookDAOImpl implements BookDAO {
         log.info("Gotten entities: {}", books);
 
         SessionUtil.closeTransactionSession();
-        log.info("Preparing to get entity from the database by isRead was done successful");
+        log.info("Preparing to get list of entities from the database by isRead was done successful");
 
         log.info("Preparing to execute READ CRUD operation was done successful");
 
@@ -237,7 +237,21 @@ public class BookDAOImpl implements BookDAO {
      */
     @Override
     public List<Book> getAll() {
-        return null;
+        log.info("Preparing to execute READ CRUD operation");
+
+        val session = SessionUtil.openTransactionSession();
+
+        log.info("Preparing to get list of all entities from the database");
+
+        val books = session.createQuery("from Book", Book.class).list();
+        log.info("Gotten entities: {}", books);
+
+        SessionUtil.closeTransactionSession();
+        log.info("Preparing to get list of all entities from the database was done successful");
+
+        log.info("Preparing to execute READ CRUD operation was done successful");
+
+        return books;
     }
 
     /**
