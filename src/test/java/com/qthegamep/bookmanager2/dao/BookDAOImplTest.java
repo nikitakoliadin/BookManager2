@@ -165,7 +165,7 @@ public class BookDAOImplTest {
 
     @Test
     public void shouldRollbackAddAllMethodWhenInputParameterIsIncorrect() {
-        books.get(1).setName(null);
+        secondBook.setName(null);
 
         bookDAO.addAll(books);
 
@@ -183,7 +183,7 @@ public class BookDAOImplTest {
 
     @Test
     public void shouldBeCloseSessionAfterRollbackAddAllMethod() {
-        books.get(1).setName(null);
+        secondBook.setName(null);
 
         bookDAO.addAll(books);
 
@@ -449,6 +449,88 @@ public class BookDAOImplTest {
         firstBook.setName(null);
 
         bookDAO.update(firstBook);
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
+    @Test
+    public void shouldUpdateAllEntitiesInTheDatabaseCorrectly() {
+        addAllEntitiesToTheDatabase(books);
+
+        firstBook.setName("shouldBeUpdated");
+        firstBook.setAuthor("shouldBeUpdated");
+        firstBook.setPrintYear(1111);
+        firstBook.setRead(true);
+
+        secondBook.setName("shouldBeUpdated");
+        secondBook.setAuthor("shouldBeUpdated");
+        secondBook.setPrintYear(1111);
+        secondBook.setRead(false);
+
+        bookDAO.updateAll(books);
+
+        var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+
+        firstBook.setRead(false);
+
+        secondBook.setRead(true);
+
+        bookDAO.updateAll(books);
+
+        allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+    }
+
+    @Test
+    public void shouldRollbackUpdateAllMethodWhenInputParameterIsIncorrect() {
+        addAllEntitiesToTheDatabase(books);
+
+        firstBook.setName("shouldBeUpdated");
+        firstBook.setAuthor("shouldBeUpdated");
+        firstBook.setPrintYear(1111);
+        firstBook.setRead(true);
+
+        secondBook.setName("shouldBeUpdated");
+        secondBook.setAuthor("shouldBeUpdated");
+        secondBook.setPrintYear(1111);
+        secondBook.setRead(false);
+
+        bookDAO.updateAll(books);
+
+        var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+
+        val updatedSecondBook = new Book();
+
+        updatedSecondBook.setId(secondBook.getId());
+        updatedSecondBook.setName(null);
+        updatedSecondBook.setAuthor(secondBook.getAuthor());
+        updatedSecondBook.setPrintYear(secondBook.getPrintYear());
+        updatedSecondBook.setRead(secondBook.isRead());
+
+        bookDAO.updateAll(List.of(updatedSecondBook));
+
+        allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook).doesNotContain(updatedSecondBook);
+    }
+
+    @Test
+    public void shouldBeCloseSessionAfterUpdateAllMethod() {
+        bookDAO.updateAll(books);
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
+    @Test
+    public void shouldBeCloseSessionAfterRollbackUpdateAllMethod() {
+        secondBook.setName(null);
+
+        bookDAO.updateAll(books);
 
         assertThat(session.isOpen()).isFalse();
     }
