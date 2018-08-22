@@ -182,7 +182,23 @@ public class BookDAOImpl implements BookDAO {
      */
     @Override
     public List<Book> getByPrintYear(int printYear) {
-        return null;
+        log.info("Preparing to execute READ CRUD operation");
+
+        val session = SessionUtil.openTransactionSession();
+
+        log.info("Preparing to get entity from the database by printYear = [{}]", printYear);
+
+        val books = session.createQuery("from Book where printYear = :printYear", Book.class)
+                .setParameter("printYear", printYear)
+                .list();
+        log.info("Gotten entities: {}", books);
+
+        SessionUtil.closeTransactionSession();
+        log.info("Preparing to get entity from the database by printYear was done successful");
+
+        log.info("Preparing to execute READ CRUD operation was done successful");
+
+        return books;
     }
 
     /**
