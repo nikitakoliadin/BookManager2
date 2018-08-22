@@ -94,7 +94,27 @@ public class BookDAOImpl implements BookDAO {
      */
     @Override
     public Book getById(int id) {
-        return null;
+        log.info("Preparing to execute READ CRUD operation");
+
+        val session = SessionUtil.openTransactionSession();
+
+        log.info("Preparing to get entity from the database by id");
+
+        val book = session.load(Book.class, id);
+        log.info("Entity: ID = {}, NAME = {}, AUTHOR = {}, PRINT_YEAR  = {}, IS_READ = {} - was gotten",
+                book.getId(),
+                book.getName(),
+                book.getAuthor(),
+                book.getPrintYear(),
+                book.isRead()
+        );
+
+        SessionUtil.closeTransactionSession();
+        log.info("Preparing to get entity from the database by id was done successful");
+
+        log.info("Preparing to execute READ CRUD operation was done successful");
+
+        return book;
     }
 
     /**
