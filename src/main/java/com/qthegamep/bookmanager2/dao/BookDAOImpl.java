@@ -96,19 +96,23 @@ public class BookDAOImpl implements BookDAO {
 
         val session = SessionUtil.openTransactionSession();
 
-        log.info("Preparing to get entity from the database by id = [{}]", id);
+        Book book;
 
-        val book = session.load(Book.class, id);
-        log.info("Gotten entity: ID = {}, NAME = {}, AUTHOR = {}, PRINT_YEAR  = {}, IS_READ = {} - was gotten",
-                book.getId(),
-                book.getName(),
-                book.getAuthor(),
-                book.getPrintYear(),
-                book.isRead()
-        );
+        try {
+            log.info("Preparing to get entity from the database by id = [{}]", id);
 
-        SessionUtil.closeTransactionSession();
-        log.info("Preparing to get entity from the database by id was done successful");
+            book = session.load(Book.class, id);
+            log.info("Gotten entity: ID = {}, NAME = {}, AUTHOR = {}, PRINT_YEAR  = {}, IS_READ = {} - was gotten",
+                    book.getId(),
+                    book.getName(),
+                    book.getAuthor(),
+                    book.getPrintYear(),
+                    book.isRead()
+            );
+        } finally {
+            SessionUtil.closeTransactionSession();
+            log.info("Preparing to get entity from the database by id was done successful");
+        }
 
         log.info("Preparing to execute READ CRUD operation was done successful");
 
@@ -334,7 +338,36 @@ public class BookDAOImpl implements BookDAO {
      */
     @Override
     public void remove(Book book) {
+        log.info("Preparing to execute DELETE CRUD operation");
 
+        val session = SessionUtil.openTransactionSession();
+
+        try {
+            log.info("Preparing to delete entity! Entity to delete: ID = {}, NAME = {}, AUTHOR = {}, PRINT_YEAR  = {}, IS_READ = {}",
+                    book.getId(),
+                    book.getName(),
+                    book.getAuthor(),
+                    book.getPrintYear(),
+                    book.isRead()
+            );
+
+            session.delete(book);
+            log.info("Preparing to delete entity was done successful");
+
+            SessionUtil.closeTransactionSession();
+            log.info("Entity was deleted in the database");
+        } catch (Exception e) {
+            log.info("Preparing to rollback");
+
+            session.getTransaction().rollback();
+            SessionUtil.closeTransactionSession();
+            log.info("Preparing to rollback was done successful! Exception message: [{}]",
+                    e.getMessage(),
+                    e
+            );
+        }
+
+        log.info("Preparing to execute DELETE CRUD operation was done successful");
     }
 
     /**
