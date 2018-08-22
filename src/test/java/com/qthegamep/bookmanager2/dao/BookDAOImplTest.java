@@ -278,6 +278,35 @@ public class BookDAOImplTest {
         assertThat(session.isOpen()).isFalse();
     }
 
+    @Test
+    public void shouldGetByIsReadEntitiesFromTheDatabaseCorrectly() {
+        addAllEntitiesToTheDatabase(books);
+
+        var bookListByIsRead = bookDAO.getByIsRead(false);
+
+        assertThat(bookListByIsRead).isNotNull().hasSize(1).contains(firstBook);
+
+        addAllEntitiesToTheDatabase(books);
+
+        bookListByIsRead = bookDAO.getByIsRead(true);
+
+        assertThat(bookListByIsRead).isNotNull().hasSize(2).contains(secondBook);
+    }
+
+    @Test
+    public void shouldGetByIsReadMethodReturnEmptyEntitiesListCorrectly() {
+        val books = bookDAO.getByIsRead(false);
+
+        assertThat(books).isNotNull().isEmpty();
+    }
+
+    @Test
+    public void shouldBeCloseSessionAfterGetByIsReadMethod() {
+        bookDAO.getByIsRead(false);
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
     private List<Book> getAllEntitiesFromTheDatabase() {
         session = SessionUtil.openTransactionSession();
 
