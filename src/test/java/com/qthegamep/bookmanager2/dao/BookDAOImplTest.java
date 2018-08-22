@@ -220,6 +220,15 @@ public class BookDAOImplTest {
     }
 
     @Test
+    public void shouldBeCloseSessionAfterGetByIdMethodIfIdIsNotExist() {
+        assertThatExceptionOfType(ObjectNotFoundException.class).isThrownBy(
+                () -> bookDAO.getById(1)
+        ).withMessage("No row with the given identifier exists: [com.qthegamep.bookmanager2.entity.Book#1]");
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
+    @Test
     public void shouldGetByNameEntitiesFromTheDatabaseCorrectly() {
         addAllEntitiesToTheDatabase(books);
 
@@ -531,6 +540,64 @@ public class BookDAOImplTest {
         secondBook.setName(null);
 
         bookDAO.updateAll(books);
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
+    @Test
+    public void shouldRemoveEntityFromTheDatabaseCorrectly() {
+        addAllEntitiesToTheDatabase(books);
+
+        bookDAO.remove(firstBook);
+
+        var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(1).contains(secondBook);
+
+        bookDAO.remove(secondBook);
+
+        allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().isEmpty();
+    }
+
+    @Test
+    public void shouldRollbackRemoveMethodWhenInputParameterIsIncorrect() {
+        addAllEntitiesToTheDatabase(books);
+
+        bookDAO.remove(firstBook);
+
+        var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(1).contains(secondBook);
+
+        val updatedSecondBook = new Book();
+
+        updatedSecondBook.setId(secondBook.getId());
+        updatedSecondBook.setName(null);
+        updatedSecondBook.setAuthor(secondBook.getAuthor());
+        updatedSecondBook.setPrintYear(secondBook.getPrintYear());
+        updatedSecondBook.setRead(secondBook.isRead());
+
+        bookDAO.remove(updatedSecondBook);
+
+        allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(1).contains(secondBook).doesNotContain(updatedSecondBook);
+    }
+
+    @Test
+    public void shouldBeCloseSessionAfterRemoveMethod() {
+        bookDAO.remove(firstBook);
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
+    @Test
+    public void shouldBeCloseSessionAfterRollbackRemoveMethod() {
+        firstBook.setName(null);
+
+        bookDAO.remove(firstBook);
 
         assertThat(session.isOpen()).isFalse();
     }
