@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.After;
 
 import org.hibernate.Session;
+import org.hibernate.ObjectNotFoundException;
 
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
@@ -157,6 +158,35 @@ public class BookDAOImplTest {
     @Test
     public void shouldBeCloseSessionAfterAddAllMethod() {
         bookDAO.addAll(books);
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
+    @Test
+    public void shouldGetByIdEntityFromTheDatabaseCorrectly() {
+        addAllEntitiesToTheDatabase(books);
+
+        val firstBook = bookDAO.getById(1);
+
+        assertThat(firstBook).isEqualTo(this.firstBook);
+
+        val secondBook = bookDAO.getById(2);
+
+        assertThat(secondBook).isEqualTo(this.secondBook);
+    }
+
+    @Test
+    public void shouldThrowObjectNotFoundExceptionWhenIdIsNotExist() {
+        assertThatExceptionOfType(ObjectNotFoundException.class).isThrownBy(
+                () -> bookDAO.getById(1)
+        ).withMessage("No row with the given identifier exists: [com.qthegamep.bookmanager2.entity.Book#1]");
+    }
+
+    @Test
+    public void shouldBeCloseSessionAfterGetByIdMethod() {
+        addAllEntitiesToTheDatabase(books);
+
+        bookDAO.getById(1);
 
         assertThat(session.isOpen()).isFalse();
     }
