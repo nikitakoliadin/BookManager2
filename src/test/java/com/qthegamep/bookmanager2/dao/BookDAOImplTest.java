@@ -191,6 +191,35 @@ public class BookDAOImplTest {
         assertThat(session.isOpen()).isFalse();
     }
 
+    @Test
+    public void shouldGetByNameEntitiesFromTheDatabaseCorrectly() {
+        addAllEntitiesToTheDatabase(books);
+
+        var bookListByName = bookDAO.getByName("test firstBook");
+
+        assertThat(bookListByName).isNotNull().hasSize(1).contains(firstBook);
+
+        addAllEntitiesToTheDatabase(books);
+
+        bookListByName = bookDAO.getByName("test secondBook");
+
+        assertThat(bookListByName).isNotNull().hasSize(2).contains(secondBook);
+    }
+
+    @Test
+    public void shouldGetByNameMethodReturnEmptyEntitiesListCorrectly() {
+        var bookListByName = bookDAO.getByName("test firstBook");
+
+        assertThat(bookListByName).isNotNull().isEmpty();
+    }
+
+    @Test
+    public void shouldBeCloseSessionAfterGetByNameMethod() {
+        bookDAO.getByName("test firstBook");
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
     private List<Book> getAllEntitiesFromTheDatabase() {
         session = SessionUtil.openTransactionSession();
 
