@@ -315,7 +315,7 @@ public class BookDAOImpl implements BookDAO {
             log.info("Preparing to update list of entities was done successful");
 
             SessionUtil.closeTransactionSession();
-            log.info("All entity was updated in the database");
+            log.info("All entities was updated in the database");
         } catch (Exception e) {
             log.info("Preparing to rollback");
 
@@ -378,6 +378,29 @@ public class BookDAOImpl implements BookDAO {
      */
     @Override
     public void removeAll(List<? extends Book> books) {
+        log.info("Preparing to execute DELETE CRUD operation");
 
+        val session = SessionUtil.openTransactionSession();
+
+        try {
+            log.info("Preparing to delete list of entities! Entities to update: {}", books);
+
+            books.forEach(session::delete);
+            log.info("Preparing to delete list of entities was done successful");
+
+            SessionUtil.closeTransactionSession();
+            log.info("All entities was deleted from the database");
+        } catch (Exception e) {
+            log.info("Preparing to rollback");
+
+            session.getTransaction().rollback();
+            SessionUtil.closeTransactionSession();
+            log.info("Preparing to rollback was done successful! Exception message: [{}]",
+                    e.getMessage(),
+                    e
+            );
+        }
+
+        log.info("Preparing to execute DELETE CRUD operation was done successful");
     }
 }
