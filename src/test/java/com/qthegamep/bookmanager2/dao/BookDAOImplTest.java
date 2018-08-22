@@ -208,14 +208,43 @@ public class BookDAOImplTest {
 
     @Test
     public void shouldGetByNameMethodReturnEmptyEntitiesListCorrectly() {
-        var bookListByName = bookDAO.getByName("test firstBook");
+        var books = bookDAO.getByName("test firstBook");
 
-        assertThat(bookListByName).isNotNull().isEmpty();
+        assertThat(books).isNotNull().isEmpty();
     }
 
     @Test
     public void shouldBeCloseSessionAfterGetByNameMethod() {
         bookDAO.getByName("test firstBook");
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
+    @Test
+    public void shouldGetByAuthorEntitiesFromTheDatabaseCorrectly() {
+        addAllEntitiesToTheDatabase(books);
+
+        var bookListByAuthor = bookDAO.getByAuthor("test firstAuthor");
+
+        assertThat(bookListByAuthor).isNotNull().hasSize(1).contains(firstBook);
+
+        addAllEntitiesToTheDatabase(books);
+
+        bookListByAuthor = bookDAO.getByAuthor("test secondAuthor");
+
+        assertThat(bookListByAuthor).isNotNull().hasSize(2).contains(secondBook);
+    }
+
+    @Test
+    public void shouldGetByAuthorMethodReturnEmptyEntitiesListCorrectly() {
+        val books = bookDAO.getByAuthor("test firstAuthor");
+
+        assertThat(books).isNotNull().isEmpty();
+    }
+
+    @Test
+    public void shouldBeCloseSessionAfterGetByAuthorMethod() {
+        bookDAO.getByAuthor("test firstAuthor");
 
         assertThat(session.isOpen()).isFalse();
     }
