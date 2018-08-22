@@ -36,9 +36,6 @@ public class BookDAOImpl implements BookDAO {
 
             session.save(book);
             log.info("Preparing to add entity was done successful");
-
-            SessionUtil.closeTransactionSession();
-            log.info("Entity was added to the database");
         } catch (Exception e) {
             log.info("Preparing to rollback");
 
@@ -48,6 +45,8 @@ public class BookDAOImpl implements BookDAO {
                     e
             );
         }
+
+        SessionUtil.closeTransactionSession();
 
         log.info("Preparing to execute CREATE CRUD operation was done successful");
     }
@@ -69,9 +68,6 @@ public class BookDAOImpl implements BookDAO {
 
             books.forEach(session::save);
             log.info("Preparing to add list of entities was done successful");
-
-            SessionUtil.closeTransactionSession();
-            log.info("All entities was added to the database");
         } catch (Exception e) {
             log.info("Preparing to rollback");
 
@@ -81,6 +77,8 @@ public class BookDAOImpl implements BookDAO {
                     e
             );
         }
+
+        SessionUtil.closeTransactionSession();
 
         log.info("Preparing to execute CREATE CRUD operation was done successful");
     }
@@ -262,7 +260,36 @@ public class BookDAOImpl implements BookDAO {
      */
     @Override
     public void update(Book book) {
+        log.info("Preparing to execute UPDATE CRUD operation");
 
+        val session = SessionUtil.openTransactionSession();
+
+        try {
+            log.info("Preparing to update entity! Entity to update: ID = {}, NAME = {}, AUTHOR = {}, PRINT_YEAR  = {}, IS_READ = {}",
+                    book.getId(),
+                    book.getName(),
+                    book.getAuthor(),
+                    book.getPrintYear(),
+                    book.isRead()
+            );
+
+            session.update(book);
+            log.info("Preparing to update entity was done successful");
+
+            SessionUtil.closeTransactionSession();
+            log.info("Entity was updated in the database");
+        } catch (Exception e) {
+            log.info("Preparing to rollback");
+
+            session.getTransaction().rollback();
+            SessionUtil.closeTransactionSession();
+            log.info("Preparing to rollback was done successful! Exception message: [{}]",
+                    e.getMessage(),
+                    e
+            );
+        }
+
+        log.info("Preparing to execute UPDATE CRUD operation was done successful");
     }
 
     /**
