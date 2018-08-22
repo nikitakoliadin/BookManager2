@@ -249,6 +249,35 @@ public class BookDAOImplTest {
         assertThat(session.isOpen()).isFalse();
     }
 
+    @Test
+    public void shouldGetByPrintYearEntitiesFromTheDatabaseCorrectly() {
+        addAllEntitiesToTheDatabase(books);
+
+        var bookListByPrintYear = bookDAO.getByPrintYear(2000);
+
+        assertThat(bookListByPrintYear).isNotNull().hasSize(1).contains(firstBook);
+
+        addAllEntitiesToTheDatabase(books);
+
+        bookListByPrintYear = bookDAO.getByPrintYear(2010);
+
+        assertThat(bookListByPrintYear).isNotNull().hasSize(2).contains(secondBook);
+    }
+
+    @Test
+    public void shouldGetByPrintYearMethodReturnEmptyEntitiesListCorrectly() {
+        val books = bookDAO.getByPrintYear(2000);
+
+        assertThat(books).isNotNull().isEmpty();
+    }
+
+    @Test
+    public void shouldBeCloseSessionAfterGetByPrintYearMethod() {
+        bookDAO.getByPrintYear(2000);
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
     private List<Book> getAllEntitiesFromTheDatabase() {
         session = SessionUtil.openTransactionSession();
 
