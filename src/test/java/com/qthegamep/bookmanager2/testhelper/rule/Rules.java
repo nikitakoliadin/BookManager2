@@ -1,6 +1,7 @@
 package com.qthegamep.bookmanager2.testhelper.rule;
 
 import com.qthegamep.bookmanager2.testhelper.util.IOUtil;
+import com.qthegamep.bookmanager2.testhelper.util.ResetDBUtil;
 
 import lombok.experimental.UtilityClass;
 import lombok.val;
@@ -66,6 +67,23 @@ public class Rules {
                     + "--------------------------------------------------------------------------------------------------------------------------------------------------------"
                     + System.lineSeparator()
             );
+        }
+    };
+
+    /**
+     * The constant is used as a rule for resetting database tables before and after each test.
+     * It is used with @Rule JUnit annotation.
+     */
+    public final ExternalResource RESET_DATABASE_RULE = new ExternalResource() {
+
+        @Override
+        protected void before() {
+            ResetDBUtil.resetDatabase();
+        }
+
+        @Override
+        protected void after() {
+            ResetDBUtil.resetDatabase();
         }
     };
 
