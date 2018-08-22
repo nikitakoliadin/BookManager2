@@ -602,6 +602,68 @@ public class BookDAOImplTest {
         assertThat(session.isOpen()).isFalse();
     }
 
+    @Test
+    public void shouldRemoveAllEntitiesFromTheDatabaseCorrectly() {
+        addAllEntitiesToTheDatabase(books);
+
+        bookDAO.removeAll(books);
+
+        var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().isEmpty();
+
+        firstBook.setId(3);
+        secondBook.setId(4);
+
+        addAllEntitiesToTheDatabase(books);
+
+        bookDAO.removeAll(books);
+
+        allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().isEmpty();
+    }
+
+    @Test
+    public void shouldRollbackRemoveAllMethodWhenInputParameterIsIncorrect() {
+        addAllEntitiesToTheDatabase(books);
+
+        bookDAO.removeAll(books);
+
+        var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().isEmpty();
+
+        addAllEntitiesToTheDatabase(books);
+
+        books.add(null);
+
+        firstBook.setId(3);
+        secondBook.setId(4);
+
+        bookDAO.removeAll(books);
+
+        allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
+
+        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+    }
+
+    @Test
+    public void shouldBeCloseSessionAfterRemoveAllMethod() {
+        bookDAO.removeAll(books);
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
+    @Test
+    public void shouldBeCloseSessionAfterRollbackRemoveAllMethod() {
+        secondBook.setName(null);
+
+        bookDAO.remove(secondBook);
+
+        assertThat(session.isOpen()).isFalse();
+    }
+
     private List<Book> getAllEntitiesFromTheDatabase() {
         session = SessionUtil.openTransactionSession();
 
