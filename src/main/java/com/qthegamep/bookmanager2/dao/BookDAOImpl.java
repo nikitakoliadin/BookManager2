@@ -65,7 +65,7 @@ public class BookDAOImpl implements BookDAO {
         val session = SessionUtil.openTransactionSession();
 
         try {
-            log.info("Preparing to add list of entities! Entities: {}", books);
+            log.info("Preparing to add list of entities! Entities to add: {}", books);
 
             books.forEach(session::save);
             log.info("Preparing to add list of entities was done successful");
@@ -98,10 +98,10 @@ public class BookDAOImpl implements BookDAO {
 
         val session = SessionUtil.openTransactionSession();
 
-        log.info("Preparing to get entity from the database by id");
+        log.info("Preparing to get entity from the database by id = [{}]", id);
 
         val book = session.load(Book.class, id);
-        log.info("Entity: ID = {}, NAME = {}, AUTHOR = {}, PRINT_YEAR  = {}, IS_READ = {} - was gotten",
+        log.info("Gotten entity: ID = {}, NAME = {}, AUTHOR = {}, PRINT_YEAR  = {}, IS_READ = {} - was gotten",
                 book.getId(),
                 book.getName(),
                 book.getAuthor(),
@@ -126,7 +126,23 @@ public class BookDAOImpl implements BookDAO {
      */
     @Override
     public List<Book> getByName(String name) {
-        return null;
+        log.info("Preparing to execute READ CRUD operation");
+
+        val session = SessionUtil.openTransactionSession();
+
+        log.info("Preparing to get entity from the database by name = [{}]", name);
+
+        val books = session.createQuery("from Book where name = :name", Book.class)
+                .setParameter("name", name)
+                .list();
+        log.info("Gotten entities: {}", books);
+
+        SessionUtil.closeTransactionSession();
+        log.info("Preparing to get entity from the database by name was done successful");
+
+        log.info("Preparing to execute READ CRUD operation was done successful");
+
+        return books;
     }
 
     /**
