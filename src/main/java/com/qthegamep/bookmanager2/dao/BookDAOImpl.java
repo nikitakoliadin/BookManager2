@@ -154,7 +154,23 @@ public class BookDAOImpl implements BookDAO {
      */
     @Override
     public List<Book> getByAuthor(String author) {
-        return null;
+        log.info("Preparing to execute READ CRUD operation");
+
+        val session = SessionUtil.openTransactionSession();
+
+        log.info("Preparing to get entity from the database by author = [{}]", author);
+
+        val books = session.createQuery("from Book where author = :author", Book.class)
+                .setParameter("author", author)
+                .list();
+        log.info("Gotten entities: {}", books);
+
+        SessionUtil.closeTransactionSession();
+        log.info("Preparing to get entity from the database by author was done successful");
+
+        log.info("Preparing to execute READ CRUD operation was done successful");
+
+        return books;
     }
 
     /**
