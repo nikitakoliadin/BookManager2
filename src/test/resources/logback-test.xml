@@ -102,6 +102,7 @@
 
     <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
         <appender-ref ref="HIBERNATE_FILE_LOG"/>
+        <appender-ref ref="ROOT_FILE"/>
     </logger>
 
     <logger name="org.hibernate.hql" level="DEBUG" additivity="false">
