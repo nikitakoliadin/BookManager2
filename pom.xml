@@ -70,7 +70,7 @@
         <jaxb-runtime.version>2.4.0-b180725.0644</jaxb-runtime.version>
 
         <!-- Hibernate -->
-        <hibernate.version>5.3.4.Final</hibernate.version>
+        <hibernate.version>5.3.5.Final</hibernate.version>
 
         <!-- MySQL JDBC -->
         <mysql.jdbc.version>8.0.12</mysql.jdbc.version>
