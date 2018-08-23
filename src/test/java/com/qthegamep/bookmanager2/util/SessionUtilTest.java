@@ -216,20 +216,24 @@ public class SessionUtilTest {
 
     @Test
     public void shouldThrowInvocationTargetExceptionWhenCreateObjectWithReflection() {
-        assertThatExceptionOfType(InvocationTargetException.class).isThrownBy(() -> {
-            val constructor = SessionUtil.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            constructor.newInstance();
-        }).withMessage(null).withCauseInstanceOf(UnsupportedOperationException.class);
+        assertThatExceptionOfType(InvocationTargetException.class)
+                .isThrownBy(
+                        () -> {
+                            val constructor = SessionUtil.class.getDeclaredConstructor();
+                            constructor.setAccessible(true);
+                            constructor.newInstance();
+                        })
+                .withMessage(null)
+                .withCauseInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     public void shouldThrowIllegalStateExceptionWhenStartOneMoreTransactionsAtTheSameTime() {
         session = SessionUtil.openTransactionSession();
 
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(
-                SessionUtil::openTransactionSession
-        ).withMessage("Transaction already active");
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(SessionUtil::openTransactionSession)
+                .withMessage("Transaction already active");
 
         SessionUtil.closeTransactionSession();
     }
