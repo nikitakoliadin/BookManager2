@@ -42,19 +42,23 @@ public class ApplicationTest {
 
     @Test
     public void shouldThrowInvocationTargetExceptionWhenCreateObjectWithReflection() {
-        assertThatExceptionOfType(InvocationTargetException.class).isThrownBy(() -> {
-            val constructor = Application.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            constructor.newInstance();
-        }).withMessage(null).withCauseInstanceOf(UnsupportedOperationException.class);
+        assertThatExceptionOfType(InvocationTargetException.class)
+                .isThrownBy(
+                        () -> {
+                            val constructor = Application.class.getDeclaredConstructor();
+                            constructor.setAccessible(true);
+                            constructor.newInstance();
+                        })
+                .withMessage(null)
+                .withCauseInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     public void shouldThrowNullPointerExceptionWhenSystemOutIsNull() {
         System.setOut(null);
 
-        assertThatNullPointerException().isThrownBy(
-                () -> Application.main(null)
-        ).withMessage(null);
+        assertThatNullPointerException()
+                .isThrownBy(() -> Application.main(null))
+                .withMessage(null);
     }
 }
