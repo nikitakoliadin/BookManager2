@@ -1,6 +1,7 @@
 package com.qthegamep.bookmanager2.util;
 
 import com.qthegamep.bookmanager2.testhelper.rule.Rules;
+import com.qthegamep.bookmanager2.testhelper.util.SessionFactoryUtil;
 
 import lombok.val;
 import org.junit.Before;
@@ -65,9 +66,14 @@ public class SessionUtilTest {
 
     @Test
     public void shouldNotCloseSessionIfSessionIsNull() throws Exception {
-        setFieldToNull("session");
+        val field = SessionUtil.class.getDeclaredField("session");
 
-        assertThat(session.isOpen()).isTrue();
+        field.setAccessible(true);
+        field.set(SessionUtil.class, null);
+
+        assertThat(field.get(SessionUtil.class)).isNull();
+
+        field.setAccessible(false);
     }
 
     @Test
@@ -132,9 +138,14 @@ public class SessionUtilTest {
     public void shouldNotCommitIfTransactionIsNull() throws Exception {
         session = SessionUtil.openTransactionSession();
 
-        setFieldToNull("transaction");
+        val field = SessionUtil.class.getDeclaredField("transaction");
 
-        assertThat(session.isOpen()).isTrue();
+        field.setAccessible(true);
+        field.set(SessionUtil.class, null);
+
+        assertThat(field.get(SessionUtil.class)).isNull();
+
+        field.setAccessible(false);
 
         SessionUtil.closeTransactionSession();
     }
@@ -160,7 +171,7 @@ public class SessionUtilTest {
 
         assertThat(session.isOpen()).isFalse();
 
-        setNewSessionFactory();
+        SessionFactoryUtil.createNewSessionFactory();
     }
 
     @Test
@@ -185,7 +196,7 @@ public class SessionUtilTest {
 
         sessionFactoryField.setAccessible(false);
 
-        setNewSessionFactory();
+        SessionFactoryUtil.createNewSessionFactory();
     }
 
     @Test
@@ -200,7 +211,7 @@ public class SessionUtilTest {
 
         assertThat(session.isOpen()).isFalse();
 
-        setNewSessionFactory();
+        SessionFactoryUtil.createNewSessionFactory();
     }
 
     @Test
@@ -221,37 +232,5 @@ public class SessionUtilTest {
         ).withMessage("Transaction already active");
 
         SessionUtil.closeTransactionSession();
-    }
-
-    private void setFieldToNull(String nameOfField) throws Exception {
-        val field = SessionUtil.class.getDeclaredField(nameOfField);
-
-        field.setAccessible(true);
-        field.set(SessionUtil.class, null);
-
-        assertThat(field.get(SessionUtil.class)).isNull();
-
-        field.setAccessible(false);
-    }
-
-    private void setNewSessionFactory() throws Exception {
-        val sessionFactoryField = SessionUtil.class.getDeclaredField("SESSION_FACTORY");
-        sessionFactoryField.setAccessible(true);
-
-        val modifiers = Field.class.getDeclaredField("modifiers");
-        modifiers.setAccessible(true);
-        modifiers.setInt(sessionFactoryField, sessionFactoryField.getModifiers() & ~Modifier.FINAL);
-
-        val buildSessionFactoryMethod = SessionUtil.class.getDeclaredMethod("buildSessionFactory");
-        buildSessionFactoryMethod.setAccessible(true);
-
-        sessionFactoryField.set(SessionUtil.class, buildSessionFactoryMethod.invoke(SessionUtil.class));
-
-        buildSessionFactoryMethod.setAccessible(false);
-
-        modifiers.setInt(sessionFactoryField, sessionFactoryField.getModifiers() | Modifier.FINAL);
-        modifiers.setAccessible(false);
-
-        sessionFactoryField.setAccessible(false);
     }
 }
