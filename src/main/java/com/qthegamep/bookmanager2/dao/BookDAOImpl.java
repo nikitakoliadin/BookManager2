@@ -3,6 +3,7 @@ package com.qthegamep.bookmanager2.dao;
 import com.qthegamep.bookmanager2.entity.Book;
 import com.qthegamep.bookmanager2.util.SessionUtil;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -19,9 +20,10 @@ public class BookDAOImpl implements BookDAO {
      * This method is transactional.
      *
      * @param book is the entity object that will be added to the database.
+     *             Book should not be null.
      */
     @Override
-    public void add(Book book) {
+    public void add(@NonNull Book book) {
         log.info("Preparing to execute CREATE CRUD operation");
 
         val session = SessionUtil.openTransactionSession();
@@ -35,7 +37,7 @@ public class BookDAOImpl implements BookDAO {
             );
 
             session.save(book);
-            log.info("Preparing to add entity was done successful");
+            log.info("Preparing to add entity was done successful! Entity was added to the database");
         } catch (Exception e) {
             log.info("Preparing to rollback");
 
@@ -56,9 +58,10 @@ public class BookDAOImpl implements BookDAO {
      * This method is transactional.
      *
      * @param books is the list of entities objects that will be added to the database.
+     *              Books should not be null.
      */
     @Override
-    public void addAll(List<? extends Book> books) {
+    public void addAll(@NonNull List<? extends Book> books) {
         log.info("Preparing to execute CREATE CRUD operation");
 
         val session = SessionUtil.openTransactionSession();
@@ -67,7 +70,7 @@ public class BookDAOImpl implements BookDAO {
             log.info("Preparing to add list of entities! Entities to add: {}", books);
 
             books.forEach(session::save);
-            log.info("Preparing to add list of entities was done successful");
+            log.info("Preparing to add list of entities was done successful! All entities was added to the database");
         } catch (Exception e) {
             log.info("Preparing to rollback");
 
@@ -88,6 +91,7 @@ public class BookDAOImpl implements BookDAO {
      * This method is transactional.
      *
      * @param id is the parameter by which the entity object will be returned.
+     *           If id doesn't exist then will be thrown {@link org.hibernate.ObjectNotFoundException}.
      * @return book entity object.
      */
     @Override
@@ -124,10 +128,11 @@ public class BookDAOImpl implements BookDAO {
      * This method is transactional.
      *
      * @param name is the parameter by which the list of entities objects will be returned.
-     * @return list of books entities objects.
+     *             Name should not be null.
+     * @return list of books entities objects. If name doesn't exist then return empty list.
      */
     @Override
-    public List<Book> getByName(String name) {
+    public List<Book> getByName(@NonNull String name) {
         log.info("Preparing to execute READ CRUD operation");
 
         val session = SessionUtil.openTransactionSession();
@@ -152,10 +157,11 @@ public class BookDAOImpl implements BookDAO {
      * This method is transactional.
      *
      * @param author is the parameter by which the list of entities objects will be returned.
-     * @return list of books entities objects.
+     *               Author should not be null.
+     * @return list of books entities objects. If author doesn't exist then return empty list.
      */
     @Override
-    public List<Book> getByAuthor(String author) {
+    public List<Book> getByAuthor(@NonNull String author) {
         log.info("Preparing to execute READ CRUD operation");
 
         val session = SessionUtil.openTransactionSession();
@@ -180,7 +186,7 @@ public class BookDAOImpl implements BookDAO {
      * This method is transactional.
      *
      * @param printYear is the parameter by which the list of entities objects will be returned.
-     * @return list of books entities objects.
+     * @return list of books entities objects. If print year doesn't exist then return empty list.
      */
     @Override
     public List<Book> getByPrintYear(int printYear) {
@@ -208,7 +214,7 @@ public class BookDAOImpl implements BookDAO {
      * This method is transactional.
      *
      * @param isRead is the parameter by which the list of entities objects will be returned.
-     * @return list of books entities objects.
+     * @return list of books entities objects. If is read doesn't exist then return empty list.
      */
     @Override
     public List<Book> getByIsRead(boolean isRead) {
@@ -235,7 +241,7 @@ public class BookDAOImpl implements BookDAO {
      * This DAO method implements returning list of all books entities objects from the database.
      * This method is transactional.
      *
-     * @return list of books entities objects.
+     * @return list of all books entities objects. If database is empty then return empty list.
      */
     @Override
     public List<Book> getAll() {
@@ -261,15 +267,18 @@ public class BookDAOImpl implements BookDAO {
      * This method is transactional.
      *
      * @param book is the new entity that will be added to the database instead of the old one.
+     *             Book should not be null.
+     *             If book is incorrect then session will be closed without updating.
      */
     @Override
-    public void update(Book book) {
+    public void update(@NonNull Book book) {
         log.info("Preparing to execute UPDATE CRUD operation");
 
         val session = SessionUtil.openTransactionSession();
 
         try {
-            log.info("Preparing to update entity! Entity to update: ID = {}, NAME = {}, AUTHOR = {}, PRINT_YEAR  = {}, IS_READ = {}",
+            log.info("Preparing to update entity! " +
+                            "Entity to update: ID = {}, NAME = {}, AUTHOR = {}, PRINT_YEAR  = {}, IS_READ = {}",
                     book.getId(),
                     book.getName(),
                     book.getAuthor(),
@@ -283,11 +292,10 @@ public class BookDAOImpl implements BookDAO {
             SessionUtil.closeTransactionSession();
             log.info("Entity was updated in the database");
         } catch (Exception e) {
-            log.info("Preparing to rollback");
+            log.info("Entity: {} was not updated!", book);
 
-            session.getTransaction().rollback();
             SessionUtil.closeTransactionSession();
-            log.info("Preparing to rollback was done successful! Exception message: [{}]",
+            log.info("Exception message: [{}]",
                     e.getMessage(),
                     e
             );
@@ -301,9 +309,11 @@ public class BookDAOImpl implements BookDAO {
      * This method is transactional.
      *
      * @param books is the new entities that will be added to the database instead of the old ones.
+     *              Books should not be null.
+     *              If books is incorrect then session will be closed without updating.
      */
     @Override
-    public void updateAll(List<? extends Book> books) {
+    public void updateAll(@NonNull List<? extends Book> books) {
         log.info("Preparing to execute UPDATE CRUD operation");
 
         val session = SessionUtil.openTransactionSession();
@@ -317,11 +327,10 @@ public class BookDAOImpl implements BookDAO {
             SessionUtil.closeTransactionSession();
             log.info("All entities was updated in the database");
         } catch (Exception e) {
-            log.info("Preparing to rollback");
+            log.info("List of entities: {} was not updated!", books);
 
-            session.getTransaction().rollback();
             SessionUtil.closeTransactionSession();
-            log.info("Preparing to rollback was done successful! Exception message: [{}]",
+            log.info("Exception message: [{}]",
                     e.getMessage(),
                     e
             );
@@ -335,15 +344,18 @@ public class BookDAOImpl implements BookDAO {
      * This method is transactional.
      *
      * @param book is the entity that will be deleted from the database.
+     *             Book should not be null.
+     *             If book is incorrect then session will be closed without deleting.
      */
     @Override
-    public void remove(Book book) {
+    public void remove(@NonNull Book book) {
         log.info("Preparing to execute DELETE CRUD operation");
 
         val session = SessionUtil.openTransactionSession();
 
         try {
-            log.info("Preparing to delete entity! Entity to delete: ID = {}, NAME = {}, AUTHOR = {}, PRINT_YEAR  = {}, IS_READ = {}",
+            log.info("Preparing to delete entity! " +
+                            "Entity to delete: ID = {}, NAME = {}, AUTHOR = {}, PRINT_YEAR  = {}, IS_READ = {}",
                     book.getId(),
                     book.getName(),
                     book.getAuthor(),
@@ -357,11 +369,10 @@ public class BookDAOImpl implements BookDAO {
             SessionUtil.closeTransactionSession();
             log.info("Entity was deleted in the database");
         } catch (Exception e) {
-            log.info("Preparing to rollback");
+            log.info("Entity: {} was not deleted!", book);
 
-            session.getTransaction().rollback();
             SessionUtil.closeTransactionSession();
-            log.info("Preparing to rollback was done successful! Exception message: [{}]",
+            log.info("Exception message: [{}]",
                     e.getMessage(),
                     e
             );
@@ -375,9 +386,10 @@ public class BookDAOImpl implements BookDAO {
      * This method is transactional.
      *
      * @param books is the entities that will be deleted from the database.
+     *              Books should not be null.
      */
     @Override
-    public void removeAll(List<? extends Book> books) {
+    public void removeAll(@NonNull List<? extends Book> books) {
         log.info("Preparing to execute DELETE CRUD operation");
 
         val session = SessionUtil.openTransactionSession();
