@@ -407,6 +407,7 @@ public class BookDAOImpl implements BookDAO {
 
             session.getTransaction().rollback();
             SessionUtil.closeTransactionSession();
+
             log.info("Preparing to rollback was done successful! Exception message: [{}]",
                     e.getMessage(),
                     e
