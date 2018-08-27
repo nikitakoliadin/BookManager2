@@ -3,8 +3,6 @@ package com.qthegamep.bookmanager2.util;
 import com.qthegamep.bookmanager2.testhelper.rule.Rules;
 
 import lombok.val;
-import org.junit.BeforeClass;
-import org.junit.AfterClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,19 +18,11 @@ public class SessionUtilTest {
 
     @ClassRule
     public static ExternalResource summaryRule = Rules.SUMMARY_RULE;
+    @ClassRule
+    public static ExternalResource recreateSessionFactoryRule = Rules.RECREATE_SESSION_FACTORY_RULE;
 
     @Rule
     public Stopwatch stopwatchRule = Rules.STOPWATCH_RULE;
-
-    @BeforeClass
-    public static void beforeClass() {
-        SessionUtil.createNewSessionFactory();
-    }
-
-    @AfterClass
-    public static void afterClass() {
-        SessionUtil.shutdown();
-    }
 
     @Test
     public void shouldBeNotNullSessionFactory() {
