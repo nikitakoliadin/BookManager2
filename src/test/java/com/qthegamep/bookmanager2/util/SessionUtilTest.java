@@ -1,7 +1,6 @@
 package com.qthegamep.bookmanager2.util;
 
 import com.qthegamep.bookmanager2.testhelper.rule.Rules;
-import com.qthegamep.bookmanager2.testhelper.util.SessionFactoryUtil;
 
 import lombok.val;
 import org.junit.Before;
@@ -14,9 +13,7 @@ import org.hibernate.Session;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -41,8 +38,70 @@ public class SessionUtilTest {
     }
 
     @Test
+    public void shouldBeNotNullSessionFactory() {
+        assertThat(session.getSessionFactory()).isNotNull();
+    }
+
+    @Test
     public void shouldBeNotNullSession() {
         assertThat(session).isNotNull();
+    }
+
+    @Test
+    public void shouldBeNotNullTransactionSession() {
+        session = SessionUtil.openTransactionSession();
+
+        assertThat(session).isNotNull();
+
+        SessionUtil.closeTransactionSession();
+    }
+
+    @Test
+    public void shouldCreateNewSessionFactoryIfOldSessionFactoryIsNull() throws Exception {
+        val oldSessionFactory = session.getSessionFactory();
+
+        SessionUtil.closeSession();
+
+        val sessionFactoryField = SessionUtil.class.getDeclaredField("sessionFactory");
+
+        sessionFactoryField.setAccessible(true);
+        sessionFactoryField.set(SessionUtil.class, null);
+
+        SessionUtil.createNewSessionFactory();
+
+        val newSessionFactory = SessionUtil.openSession().getSessionFactory();
+
+        assertThat(oldSessionFactory).isNotEqualTo(newSessionFactory);
+
+        sessionFactoryField.setAccessible(false);
+    }
+
+    @Test
+    public void shouldCreateNewSessionFactoryIfOldSessionFactoryIsClosed() {
+        val oldSessionFactory = session.getSessionFactory();
+
+        SessionUtil.shutdown();
+
+        SessionUtil.createNewSessionFactory();
+
+        session = SessionUtil.openSession();
+
+        val newSessionFactory = session.getSessionFactory();
+
+        assertThat(oldSessionFactory).isNotEqualTo(newSessionFactory);
+    }
+
+    @Test
+    public void shouldNotCreateNewSessionFactoryIfOldSessionFactoryIsOpened() {
+        val oldSessionFactory = session.getSessionFactory();
+
+        SessionUtil.createNewSessionFactory();
+
+        session = SessionUtil.openSession();
+
+        val newSessionFactory = session.getSessionFactory();
+
+        assertThat(oldSessionFactory).isEqualTo(newSessionFactory);
     }
 
     @Test
@@ -85,15 +144,6 @@ public class SessionUtilTest {
         SessionUtil.closeSession();
 
         assertThat(session.isOpen()).isFalse();
-    }
-
-    @Test
-    public void shouldBeNotNullTransactionSession() {
-        session = SessionUtil.openTransactionSession();
-
-        assertThat(session).isNotNull();
-
-        SessionUtil.closeTransactionSession();
     }
 
     @Test
@@ -164,43 +214,36 @@ public class SessionUtilTest {
     }
 
     @Test
-    public void shouldShutdownCorrectly() throws Exception {
+    public void shouldShutdownCorrectly() {
         session = SessionUtil.openTransactionSession();
 
         SessionUtil.shutdown();
 
         assertThat(session.isOpen()).isFalse();
 
-        SessionFactoryUtil.createNewSessionFactory();
+        SessionUtil.createNewSessionFactory();
     }
 
     @Test
     public void shouldNotShutdownIfSessionFactoryIsNull() throws Exception {
         session = SessionUtil.openTransactionSession();
 
-        val sessionFactoryField = SessionUtil.class.getDeclaredField("SESSION_FACTORY");
+        val sessionFactoryField = SessionUtil.class.getDeclaredField("sessionFactory");
+
         sessionFactoryField.setAccessible(true);
-
-        val modifiers = Field.class.getDeclaredField("modifiers");
-        modifiers.setAccessible(true);
-        modifiers.setInt(sessionFactoryField, sessionFactoryField.getModifiers() & ~Modifier.FINAL);
-
         sessionFactoryField.set(SessionUtil.class, null);
 
         SessionUtil.shutdown();
 
         assertThat(session.isOpen()).isFalse();
 
-        modifiers.setInt(sessionFactoryField, sessionFactoryField.getModifiers() | Modifier.FINAL);
-        modifiers.setAccessible(false);
-
         sessionFactoryField.setAccessible(false);
 
-        SessionFactoryUtil.createNewSessionFactory();
+        SessionUtil.createNewSessionFactory();
     }
 
     @Test
-    public void shouldNotShutdownIfItIsShutdownAlready() throws Exception {
+    public void shouldNotShutdownIfItIsShutdownAlready() {
         session = SessionUtil.openTransactionSession();
 
         SessionUtil.shutdown();
@@ -211,7 +254,7 @@ public class SessionUtilTest {
 
         assertThat(session.isOpen()).isFalse();
 
-        SessionFactoryUtil.createNewSessionFactory();
+        SessionUtil.createNewSessionFactory();
     }
 
     @Test
@@ -231,10 +274,32 @@ public class SessionUtilTest {
     public void shouldThrowIllegalStateExceptionWhenStartOneMoreTransactionsAtTheSameTime() {
         session = SessionUtil.openTransactionSession();
 
-        assertThatExceptionOfType(IllegalStateException.class)
+        assertThatIllegalStateException()
                 .isThrownBy(SessionUtil::openTransactionSession)
                 .withMessage("Transaction already active");
 
         SessionUtil.closeTransactionSession();
+    }
+
+    @Test
+    public void shouldThrowIllegalStateExceptionWhenOpenSessionIfSessionFactoryIsClosed() {
+        SessionUtil.shutdown();
+
+        assertThatIllegalStateException()
+                .isThrownBy(SessionUtil::openSession)
+                .withMessage("EntityManagerFactory is closed");
+
+        SessionUtil.createNewSessionFactory();
+    }
+
+    @Test
+    public void shouldThrowIllegalStateExceptionWhenOpenTransactionSessionIfSessionFactoryIsClosed() {
+        SessionUtil.shutdown();
+
+        assertThatIllegalStateException()
+                .isThrownBy(SessionUtil::openTransactionSession)
+                .withMessage("EntityManagerFactory is closed");
+
+        SessionUtil.createNewSessionFactory();
     }
 }
