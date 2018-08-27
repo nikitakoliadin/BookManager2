@@ -157,14 +157,18 @@ public class SessionUtilTest {
     public void shouldNotCloseSessionIfSessionIsNull() throws Exception {
         SessionUtil.openSession();
 
-        val field = SessionUtil.class.getDeclaredField("session");
+        val sessionField = SessionUtil.class.getDeclaredField("session");
 
-        field.setAccessible(true);
-        field.set(SessionUtil.class, null);
+        sessionField.setAccessible(true);
+        val oldSessionField = sessionField.get(SessionUtil.class);
+        sessionField.set(SessionUtil.class, null);
 
-        assertThat(field.get(SessionUtil.class)).isNull();
+        SessionUtil.closeSession();
 
-        field.setAccessible(false);
+        assertThat(sessionField.get(SessionUtil.class)).isNull();
+
+        sessionField.set(SessionUtil.class, oldSessionField);
+        sessionField.setAccessible(false);
 
         SessionUtil.closeSession();
     }
