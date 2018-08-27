@@ -2,6 +2,7 @@ package com.qthegamep.bookmanager2.testhelper.rule;
 
 import com.qthegamep.bookmanager2.testhelper.util.IOUtil;
 import com.qthegamep.bookmanager2.testhelper.util.ResetDBUtil;
+import com.qthegamep.bookmanager2.util.SessionUtil;
 
 import lombok.experimental.UtilityClass;
 import lombok.val;
@@ -23,7 +24,7 @@ public class Rules {
 
     /**
      * The constant is used as a rule for calculating of the time spent by a test.
-     * It is used with @Rule JUnit annotation.
+     * It is used with {@link org.junit.Rule} JUnit annotation.
      */
     public final Stopwatch STOPWATCH_RULE = new Stopwatch() {
 
@@ -42,7 +43,7 @@ public class Rules {
 
     /**
      * The constant is used as a rule for outputting results of the class tests.
-     * It is used with @ClassRule JUnit annotation.
+     * It is used with {@link org.junit.ClassRule} JUnit annotation.
      */
     public final ExternalResource SUMMARY_RULE = new ExternalResource() {
 
@@ -72,7 +73,7 @@ public class Rules {
 
     /**
      * The constant is used as a rule for resetting database tables before and after each test.
-     * It is used with @Rule JUnit annotation.
+     * It is used with {@link org.junit.Rule} JUnit annotation.
      */
     public final ExternalResource RESET_DATABASE_RULE = new ExternalResource() {
 
@@ -88,8 +89,25 @@ public class Rules {
     };
 
     /**
+     * This constant is used as a rule for recreating session factory before and after class tests.
+     * It is used with {@link org.junit.ClassRule} JUnit annotation.
+     */
+    public final ExternalResource RECREATE_SESSION_FACTORY_RULE = new ExternalResource() {
+
+        @Override
+        protected void before() {
+            SessionUtil.createNewSessionFactory();
+        }
+
+        @Override
+        protected void after() {
+            SessionUtil.shutdown();
+        }
+    };
+
+    /**
      * This constant is used as a rule for configure input and output on the console.
-     * It is used with @Rule JUnit annotation.
+     * It is used with {@link org.junit.Rule} JUnit annotation.
      */
     public final ExternalResource INPUT_OUTPUT_SETUP_RULE = new ExternalResource() {
 
