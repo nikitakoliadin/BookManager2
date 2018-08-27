@@ -57,3 +57,5 @@
 ## Fix In Future
 
 ## Bugs && Messages
+* Pitest: more threads at end of test
+* Pitest: mutation was not viable
