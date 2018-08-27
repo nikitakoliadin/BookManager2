@@ -11,8 +11,6 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.AfterClass;
 
 import org.hibernate.Session;
 import org.hibernate.ObjectNotFoundException;
@@ -30,6 +28,8 @@ public class BookDAOImplTest {
 
     @ClassRule
     public static ExternalResource summaryRule = Rules.SUMMARY_RULE;
+    @ClassRule
+    public static ExternalResource recreateSessionFactoryRule = Rules.RECREATE_SESSION_FACTORY_RULE;
 
     @Rule
     public Stopwatch stopwatchRule = Rules.STOPWATCH_RULE;
@@ -44,16 +44,6 @@ public class BookDAOImplTest {
     private Book secondBook;
 
     private List<Book> books;
-
-    @BeforeClass
-    public static void beforeClass() {
-        SessionUtil.createNewSessionFactory();
-    }
-
-    @AfterClass
-    public static void afterClass() {
-        SessionUtil.shutdown();
-    }
 
     @Before
     public void setUp() {
