@@ -11,6 +11,8 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.After;
+import org.junit.BeforeClass;
+import org.junit.AfterClass;
 
 import org.hibernate.Session;
 import org.hibernate.ObjectNotFoundException;
@@ -42,6 +44,16 @@ public class BookDAOImplTest {
     private Book secondBook;
 
     private List<Book> books;
+
+    @BeforeClass
+    public static void beforeClass() {
+        SessionUtil.createNewSessionFactory();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        SessionUtil.shutdown();
+    }
 
     @Before
     public void setUp() {
