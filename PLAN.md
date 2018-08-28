@@ -15,6 +15,7 @@
                                 * [Book.java](src/main/java/com/qthegamep/bookmanager2/entity/Book.java)
                             * [service](src/main/java/com/qthegamep/bookmanager2/service)
                                 * [BookService.java](src/main/java/com/qthegamep/bookmanager2/service/BookService.java)
+                                * [BookServiceImpl.java](src/main/java/com/qthegamep/bookmanager2/service/BookServiceImpl.java)
                             * [util](src/main/java/com/qthegamep/bookmanager2/util)
                                 * [SessionUtil.java](src/main/java/com/qthegamep/bookmanager2/util/SessionUtil.java)
                             * [Application.java](src/main/java/com/qthegamep/bookmanager2/Application.java)
