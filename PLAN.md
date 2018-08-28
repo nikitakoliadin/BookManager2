@@ -38,6 +38,8 @@
                                 * [BookDAOImplTest.java](src/test/java/com/qthegamep/bookmanager2/dao/BookDAOImplTest.java)
                             * [entity](src/test/java/com/qthegamep/bookmanager2/entity)
                                 * [BookTest.java](src/test/java/com/qthegamep/bookmanager2/entity/BookTest.java)
+                            * [service](src/test/java/com/qthegamep/bookmanager2/service)
+                                * [BookServiceImplTest.java](src/test/java/com/qthegamep/bookmanager2/service/BookServiceImplTest.java)
                             * [testhelper](src/test/java/com/qthegamep/bookmanager2/testhelper)
                                 * [rule](src/test/java/com/qthegamep/bookmanager2/testhelper/rule)
                                     * [Rules.java](src/test/java/com/qthegamep/bookmanager2/testhelper/rule/Rules.java)
