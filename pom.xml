@@ -29,6 +29,12 @@
         <assemblyPlugin.mainClass>com.qthegamep.bookmanager2.Application</assemblyPlugin.mainClass>
         <assemblyPlugin.appendAssemblyId>false</assemblyPlugin.appendAssemblyId>
 
+        <!-- Site plugin -->
+        <sitePlugin.version>3.7.1</sitePlugin.version>
+
+        <!-- Report plugin -->
+        <reportPlugin.version>3.0.0</reportPlugin.version>
+
         <!-- JaCoCo plugin -->
         <jacocoPlugin.version>0.8.1</jacocoPlugin.version>
 
@@ -70,7 +76,7 @@
         <jaxb-runtime.version>2.4.0-b180725.0644</jaxb-runtime.version>
 
         <!-- Hibernate -->
-        <hibernate.version>5.3.4.Final</hibernate.version>
+        <hibernate.version>5.3.5.Final</hibernate.version>
 
         <!-- MySQL JDBC -->
         <mysql.jdbc.version>8.0.12</mysql.jdbc.version>
@@ -132,6 +138,20 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Site plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${sitePlugin.version}</version>
+            </plugin>
+
+            <!-- Report plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${reportPlugin.version}</version>
             </plugin>
 
             <!-- JaCoCo plugin -->

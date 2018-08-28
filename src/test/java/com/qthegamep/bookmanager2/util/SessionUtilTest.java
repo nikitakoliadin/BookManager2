@@ -3,19 +3,14 @@ package com.qthegamep.bookmanager2.util;
 import com.qthegamep.bookmanager2.testhelper.rule.Rules;
 
 import lombok.val;
-import org.junit.Before;
-import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.hibernate.Session;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -23,41 +18,126 @@ public class SessionUtilTest {
 
     @ClassRule
     public static ExternalResource summaryRule = Rules.SUMMARY_RULE;
+    @ClassRule
+    public static ExternalResource recreateSessionFactoryRule = Rules.RECREATE_SESSION_FACTORY_RULE;
 
     @Rule
     public Stopwatch stopwatchRule = Rules.STOPWATCH_RULE;
 
-    private Session session;
+    @Test
+    public void shouldBeNotNullSessionFactory() {
+        val session = SessionUtil.openSession();
 
-    @Before
-    public void setUp() {
-        session = SessionUtil.openSession();
-    }
+        assertThat(session.getSessionFactory()).isNotNull();
 
-    @After
-    public void tearDown() {
         SessionUtil.closeSession();
     }
 
     @Test
     public void shouldBeNotNullSession() {
+        val session = SessionUtil.openSession();
+
         assertThat(session).isNotNull();
+
+        SessionUtil.closeSession();
+    }
+
+    @Test
+    public void shouldBeNotNullTransactionSession() {
+        val transactionSession = SessionUtil.openTransactionSession();
+
+        assertThat(transactionSession).isNotNull();
+
+        SessionUtil.closeTransactionSession();
+    }
+
+    @Test
+    public void shouldCreateNewSessionFactoryIfOldSessionFactoryIsNull() throws Exception {
+        val session = SessionUtil.openSession();
+
+        val oldSessionFactory = session.getSessionFactory();
+
+        SessionUtil.closeSession();
+
+        val sessionFactoryField = SessionUtil.class.getDeclaredField("sessionFactory");
+
+        sessionFactoryField.setAccessible(true);
+        val oldSessionFactoryField = sessionFactoryField.get(SessionUtil.class);
+        sessionFactoryField.set(SessionUtil.class, null);
+
+        SessionUtil.createNewSessionFactory();
+
+        val newSessionFactory = SessionUtil.openSession().getSessionFactory();
+
+        assertThat(oldSessionFactory).isNotEqualTo(newSessionFactory);
+
+        SessionUtil.shutdown();
+
+        sessionFactoryField.set(SessionUtil.class, oldSessionFactoryField);
+        sessionFactoryField.setAccessible(false);
+
+        SessionUtil.closeSession();
+    }
+
+    @Test
+    public void shouldCreateNewSessionFactoryIfOldSessionFactoryIsClosed() {
+        var session = SessionUtil.openSession();
+
+        val oldSessionFactory = session.getSessionFactory();
+
+        SessionUtil.shutdown();
+
+        SessionUtil.createNewSessionFactory();
+
+        session = SessionUtil.openSession();
+
+        val newSessionFactory = session.getSessionFactory();
+
+        assertThat(oldSessionFactory).isNotEqualTo(newSessionFactory);
+
+        SessionUtil.closeSession();
+    }
+
+    @Test
+    public void shouldNotCreateNewSessionFactoryIfOldSessionFactoryIsOpened() {
+        var session = SessionUtil.openSession();
+
+        val oldSessionFactory = session.getSessionFactory();
+
+        SessionUtil.createNewSessionFactory();
+
+        session = SessionUtil.openSession();
+
+        val newSessionFactory = session.getSessionFactory();
+
+        assertThat(oldSessionFactory).isEqualTo(newSessionFactory);
+
+        SessionUtil.closeSession();
     }
 
     @Test
     public void shouldOpenSessionCorrectly() {
+        val session = SessionUtil.openSession();
+
         assertThat(session.isOpen()).isTrue();
+
+        SessionUtil.closeSession();
     }
 
     @Test
     public void shouldBeTheSameSession() {
         val session = SessionUtil.openSession();
+        val newSession = SessionUtil.openSession();
 
-        assertThat(session).isEqualTo(this.session);
+        assertThat(session).isEqualTo(newSession);
+
+        SessionUtil.closeSession();
     }
 
     @Test
     public void shouldCloseSessionCorrectly() {
+        val session = SessionUtil.openSession();
+
         SessionUtil.closeSession();
 
         assertThat(session.isOpen()).isFalse();
@@ -65,42 +145,47 @@ public class SessionUtilTest {
 
     @Test
     public void shouldNotCloseSessionIfSessionIsNull() throws Exception {
-        setFieldToNull("session");
+        SessionUtil.openSession();
 
-        assertThat(session.isOpen()).isTrue();
+        val sessionField = SessionUtil.class.getDeclaredField("session");
+
+        sessionField.setAccessible(true);
+        val oldSessionField = sessionField.get(SessionUtil.class);
+        sessionField.set(SessionUtil.class, null);
+
+        SessionUtil.closeSession();
+
+        assertThat(sessionField.get(SessionUtil.class)).isNull();
+
+        sessionField.set(SessionUtil.class, oldSessionField);
+        sessionField.setAccessible(false);
+
+        SessionUtil.closeSession();
     }
 
     @Test
     public void shouldNotCloseSessionIfSessionIsClosedAlready() {
-        SessionUtil.closeSession();
-
-        assertThat(session.isOpen()).isFalse();
+        val session = SessionUtil.openSession();
 
         SessionUtil.closeSession();
 
         assertThat(session.isOpen()).isFalse();
-    }
 
-    @Test
-    public void shouldBeNotNullTransactionSession() {
-        session = SessionUtil.openTransactionSession();
-
-        assertThat(session).isNotNull();
-
-        SessionUtil.closeTransactionSession();
+        SessionUtil.closeSession();
     }
 
     @Test
     public void shouldOpenTransactionSessionCorrectly() {
-        session = SessionUtil.openTransactionSession();
+        val transactionSession = SessionUtil.openTransactionSession();
 
-        assertThat(session.isOpen()).isTrue();
+        assertThat(transactionSession.isOpen()).isTrue();
 
         SessionUtil.closeTransactionSession();
     }
 
     @Test
     public void shouldBeTheSameTransactionSessionAndSession() {
+        val session = SessionUtil.openSession();
         val transactionSession = SessionUtil.openTransactionSession();
 
         assertThat(transactionSession).isEqualTo(session);
@@ -110,9 +195,9 @@ public class SessionUtilTest {
 
     @Test
     public void shouldStartTransaction() {
-        session = SessionUtil.openTransactionSession();
+        val transactionSession = SessionUtil.openTransactionSession();
 
-        val transaction = session.getTransaction();
+        val transaction = transactionSession.getTransaction();
 
         assertThat(transaction.isActive()).isTrue();
 
@@ -121,29 +206,34 @@ public class SessionUtilTest {
 
     @Test
     public void shouldCloseTransactionSessionCorrectly() {
-        session = SessionUtil.openTransactionSession();
+        val transactionSession = SessionUtil.openTransactionSession();
 
         SessionUtil.closeTransactionSession();
 
-        assertThat(session.isOpen()).isFalse();
+        assertThat(transactionSession.isOpen()).isFalse();
     }
 
     @Test
     public void shouldNotCommitIfTransactionIsNull() throws Exception {
-        session = SessionUtil.openTransactionSession();
+        SessionUtil.openTransactionSession();
 
-        setFieldToNull("transaction");
+        val transactionField = SessionUtil.class.getDeclaredField("transaction");
 
-        assertThat(session.isOpen()).isTrue();
+        transactionField.setAccessible(true);
+        transactionField.set(SessionUtil.class, null);
+
+        assertThat(transactionField.get(SessionUtil.class)).isNull();
+
+        transactionField.setAccessible(false);
 
         SessionUtil.closeTransactionSession();
     }
 
     @Test
     public void shouldNotCommitIfTransactionIsNotActive() {
-        session = SessionUtil.openTransactionSession();
+        val transactionSession = SessionUtil.openTransactionSession();
 
-        val transaction = session.getTransaction();
+        val transaction = transactionSession.getTransaction();
 
         transaction.rollback();
 
@@ -153,105 +243,94 @@ public class SessionUtilTest {
     }
 
     @Test
-    public void shouldShutdownCorrectly() throws Exception {
-        session = SessionUtil.openTransactionSession();
+    public void shouldShutdownCorrectly() {
+        val transactionSession = SessionUtil.openTransactionSession();
 
         SessionUtil.shutdown();
 
-        assertThat(session.isOpen()).isFalse();
+        assertThat(transactionSession.isOpen()).isFalse();
 
-        setNewSessionFactory();
+        SessionUtil.createNewSessionFactory();
     }
 
     @Test
     public void shouldNotShutdownIfSessionFactoryIsNull() throws Exception {
-        session = SessionUtil.openTransactionSession();
+        val transactionSession = SessionUtil.openTransactionSession();
 
-        val sessionFactoryField = SessionUtil.class.getDeclaredField("SESSION_FACTORY");
+        val sessionFactoryField = SessionUtil.class.getDeclaredField("sessionFactory");
+
         sessionFactoryField.setAccessible(true);
-
-        val modifiers = Field.class.getDeclaredField("modifiers");
-        modifiers.setAccessible(true);
-        modifiers.setInt(sessionFactoryField, sessionFactoryField.getModifiers() & ~Modifier.FINAL);
-
+        val oldSessionFactoryFieldValue = sessionFactoryField.get(SessionUtil.class);
         sessionFactoryField.set(SessionUtil.class, null);
 
         SessionUtil.shutdown();
 
-        assertThat(session.isOpen()).isFalse();
+        assertThat(transactionSession.isOpen()).isFalse();
 
-        modifiers.setInt(sessionFactoryField, sessionFactoryField.getModifiers() | Modifier.FINAL);
-        modifiers.setAccessible(false);
-
+        sessionFactoryField.set(SessionUtil.class, oldSessionFactoryFieldValue);
         sessionFactoryField.setAccessible(false);
 
-        setNewSessionFactory();
+        SessionUtil.createNewSessionFactory();
     }
 
     @Test
-    public void shouldNotShutdownIfItIsShutdownAlready() throws Exception {
-        session = SessionUtil.openTransactionSession();
+    public void shouldNotShutdownIfItIsShutdownAlready() {
+        val transactionSession = SessionUtil.openTransactionSession();
 
         SessionUtil.shutdown();
 
-        assertThat(session.isOpen()).isFalse();
+        assertThat(transactionSession.isOpen()).isFalse();
 
         SessionUtil.shutdown();
 
-        assertThat(session.isOpen()).isFalse();
+        assertThat(transactionSession.isOpen()).isFalse();
 
-        setNewSessionFactory();
+        SessionUtil.createNewSessionFactory();
     }
 
     @Test
     public void shouldThrowInvocationTargetExceptionWhenCreateObjectWithReflection() {
-        assertThatExceptionOfType(InvocationTargetException.class).isThrownBy(() -> {
-            val constructor = SessionUtil.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            constructor.newInstance();
-        }).withMessage(null).withCauseInstanceOf(UnsupportedOperationException.class);
+        assertThatExceptionOfType(InvocationTargetException.class)
+                .isThrownBy(
+                        () -> {
+                            val constructor = SessionUtil.class.getDeclaredConstructor();
+                            constructor.setAccessible(true);
+                            constructor.newInstance();
+                        })
+                .withMessage(null)
+                .withCauseInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     public void shouldThrowIllegalStateExceptionWhenStartOneMoreTransactionsAtTheSameTime() {
-        session = SessionUtil.openTransactionSession();
+        SessionUtil.openTransactionSession();
 
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(
-                SessionUtil::openTransactionSession
-        ).withMessage("Transaction already active");
+        assertThatIllegalStateException()
+                .isThrownBy(SessionUtil::openTransactionSession)
+                .withMessage("Transaction already active");
 
         SessionUtil.closeTransactionSession();
     }
 
-    private void setFieldToNull(String nameOfField) throws Exception {
-        val field = SessionUtil.class.getDeclaredField(nameOfField);
+    @Test
+    public void shouldThrowIllegalStateExceptionWhenOpenSessionIfSessionFactoryIsClosed() {
+        SessionUtil.shutdown();
 
-        field.setAccessible(true);
-        field.set(SessionUtil.class, null);
+        assertThatIllegalStateException()
+                .isThrownBy(SessionUtil::openSession)
+                .withMessage("EntityManagerFactory is closed");
 
-        assertThat(field.get(SessionUtil.class)).isNull();
-
-        field.setAccessible(false);
+        SessionUtil.createNewSessionFactory();
     }
 
-    private void setNewSessionFactory() throws Exception {
-        val sessionFactoryField = SessionUtil.class.getDeclaredField("SESSION_FACTORY");
-        sessionFactoryField.setAccessible(true);
+    @Test
+    public void shouldThrowIllegalStateExceptionWhenOpenTransactionSessionIfSessionFactoryIsClosed() {
+        SessionUtil.shutdown();
 
-        val modifiers = Field.class.getDeclaredField("modifiers");
-        modifiers.setAccessible(true);
-        modifiers.setInt(sessionFactoryField, sessionFactoryField.getModifiers() & ~Modifier.FINAL);
+        assertThatIllegalStateException()
+                .isThrownBy(SessionUtil::openTransactionSession)
+                .withMessage("EntityManagerFactory is closed");
 
-        val buildSessionFactoryMethod = SessionUtil.class.getDeclaredMethod("buildSessionFactory");
-        buildSessionFactoryMethod.setAccessible(true);
-
-        sessionFactoryField.set(SessionUtil.class, buildSessionFactoryMethod.invoke(SessionUtil.class));
-
-        buildSessionFactoryMethod.setAccessible(false);
-
-        modifiers.setInt(sessionFactoryField, sessionFactoryField.getModifiers() | Modifier.FINAL);
-        modifiers.setAccessible(false);
-
-        sessionFactoryField.setAccessible(false);
+        SessionUtil.createNewSessionFactory();
     }
 }

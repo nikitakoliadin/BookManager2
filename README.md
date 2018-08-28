@@ -88,6 +88,8 @@ If you want to use this project:
     * [Apache Maven Compiler Plugin](https://maven.apache.org/plugins/maven-compiler-plugin/)
     * [Apache Maven Surefire Plugin](https://maven.apache.org/components/surefire/maven-surefire-plugin/)
     * [Apache Maven Assembly Plugin](http://maven.apache.org/plugins/maven-assembly-plugin/)
+    * [Apache Maven Site Plugin](https://maven.apache.org/plugins/maven-site-plugin/)
+    * [Apache Maven Project Info Reports Plugin](https://maven.apache.org/plugins/maven-project-info-reports-plugin/)
     * [JaCoCo Plugin](http://www.baeldung.com/jacoco)
     * [Pitest Plugin](http://pitest.org/quickstart/maven/)
     * [Versions Maven Plugin](http://www.mojohaus.org/versions-maven-plugin/)

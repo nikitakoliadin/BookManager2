@@ -28,6 +28,8 @@ public class BookDAOImplTest {
 
     @ClassRule
     public static ExternalResource summaryRule = Rules.SUMMARY_RULE;
+    @ClassRule
+    public static ExternalResource recreateSessionFactoryRule = Rules.RECREATE_SESSION_FACTORY_RULE;
 
     @Rule
     public Stopwatch stopwatchRule = Rules.STOPWATCH_RULE;
@@ -96,13 +98,26 @@ public class BookDAOImplTest {
 
         var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(1).contains(firstBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(1)
+                .contains(firstBook);
 
         bookDAO.add(secondBook);
 
         allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(2)
+                .contains(firstBook, secondBook);
+    }
+
+    @Test
+    public void shouldThrowNullPointerExceptionWhenAddNullEntity() {
+        assertThatNullPointerException()
+                .isThrownBy(() -> bookDAO.add(null))
+                .withMessage("book is marked @NonNull but is null");
     }
 
     @Test
@@ -113,7 +128,9 @@ public class BookDAOImplTest {
 
         val allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().isEmpty();
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
@@ -138,7 +155,10 @@ public class BookDAOImplTest {
 
         var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(2)
+                .contains(firstBook, secondBook);
 
         bookDAO.addAll(books);
 
@@ -160,7 +180,17 @@ public class BookDAOImplTest {
         fourthBook.setPrintYear(secondBook.getPrintYear());
         fourthBook.setRead(secondBook.isRead());
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(4).contains(firstBook, secondBook, thirdBook, fourthBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(4)
+                .contains(firstBook, secondBook, thirdBook, fourthBook);
+    }
+
+    @Test
+    public void shouldThrowNullPointerExceptionWhenAddNullListOfEntities() {
+        assertThatNullPointerException()
+                .isThrownBy(() -> bookDAO.addAll(null))
+                .withMessage("books is marked @NonNull but is null");
     }
 
     @Test
@@ -171,7 +201,9 @@ public class BookDAOImplTest {
 
         val allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().isEmpty();
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
@@ -205,9 +237,9 @@ public class BookDAOImplTest {
 
     @Test
     public void shouldThrowObjectNotFoundExceptionWhenIdIsNotExist() {
-        assertThatExceptionOfType(ObjectNotFoundException.class).isThrownBy(
-                () -> bookDAO.getById(1)
-        ).withMessage("No row with the given identifier exists: [com.qthegamep.bookmanager2.entity.Book#1]");
+        assertThatExceptionOfType(ObjectNotFoundException.class)
+                .isThrownBy(() -> bookDAO.getById(1))
+                .withMessage("No row with the given identifier exists: [com.qthegamep.bookmanager2.entity.Book#1]");
     }
 
     @Test
@@ -221,9 +253,9 @@ public class BookDAOImplTest {
 
     @Test
     public void shouldBeCloseSessionAfterGetByIdMethodIfIdIsNotExist() {
-        assertThatExceptionOfType(ObjectNotFoundException.class).isThrownBy(
-                () -> bookDAO.getById(1)
-        ).withMessage("No row with the given identifier exists: [com.qthegamep.bookmanager2.entity.Book#1]");
+        assertThatExceptionOfType(ObjectNotFoundException.class)
+                .isThrownBy(() -> bookDAO.getById(1))
+                .withMessage("No row with the given identifier exists: [com.qthegamep.bookmanager2.entity.Book#1]");
 
         assertThat(session.isOpen()).isFalse();
     }
@@ -234,20 +266,35 @@ public class BookDAOImplTest {
 
         var bookListByName = bookDAO.getByName("test firstBook");
 
-        assertThat(bookListByName).isNotNull().hasSize(1).contains(firstBook);
+        assertThat(bookListByName)
+                .isNotNull()
+                .hasSize(1)
+                .contains(firstBook);
 
         addAllEntitiesToTheDatabase(books);
 
         bookListByName = bookDAO.getByName("test secondBook");
 
-        assertThat(bookListByName).isNotNull().hasSize(2).contains(secondBook);
+        assertThat(bookListByName)
+                .isNotNull()
+                .hasSize(2)
+                .contains(secondBook);
+    }
+
+    @Test
+    public void shouldThrowNullPointerExceptionWhenGetByNameNullListOfEntities() {
+        assertThatNullPointerException()
+                .isThrownBy(() -> bookDAO.getByName(null))
+                .withMessage("name is marked @NonNull but is null");
     }
 
     @Test
     public void shouldGetByNameMethodReturnEmptyEntitiesListCorrectly() {
         var books = bookDAO.getByName("test firstBook");
 
-        assertThat(books).isNotNull().isEmpty();
+        assertThat(books)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
@@ -263,20 +310,35 @@ public class BookDAOImplTest {
 
         var bookListByAuthor = bookDAO.getByAuthor("test firstAuthor");
 
-        assertThat(bookListByAuthor).isNotNull().hasSize(1).contains(firstBook);
+        assertThat(bookListByAuthor)
+                .isNotNull()
+                .hasSize(1)
+                .contains(firstBook);
 
         addAllEntitiesToTheDatabase(books);
 
         bookListByAuthor = bookDAO.getByAuthor("test secondAuthor");
 
-        assertThat(bookListByAuthor).isNotNull().hasSize(2).contains(secondBook);
+        assertThat(bookListByAuthor)
+                .isNotNull()
+                .hasSize(2)
+                .contains(secondBook);
+    }
+
+    @Test
+    public void shouldThrowNullPointerExceptionWhenGetByAuthorNullListOfEntities() {
+        assertThatNullPointerException()
+                .isThrownBy(() -> bookDAO.getByAuthor(null))
+                .withMessage("author is marked @NonNull but is null");
     }
 
     @Test
     public void shouldGetByAuthorMethodReturnEmptyEntitiesListCorrectly() {
         val books = bookDAO.getByAuthor("test firstAuthor");
 
-        assertThat(books).isNotNull().isEmpty();
+        assertThat(books)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
@@ -292,20 +354,28 @@ public class BookDAOImplTest {
 
         var bookListByPrintYear = bookDAO.getByPrintYear(2000);
 
-        assertThat(bookListByPrintYear).isNotNull().hasSize(1).contains(firstBook);
+        assertThat(bookListByPrintYear)
+                .isNotNull()
+                .hasSize(1)
+                .contains(firstBook);
 
         addAllEntitiesToTheDatabase(books);
 
         bookListByPrintYear = bookDAO.getByPrintYear(2010);
 
-        assertThat(bookListByPrintYear).isNotNull().hasSize(2).contains(secondBook);
+        assertThat(bookListByPrintYear)
+                .isNotNull()
+                .hasSize(2)
+                .contains(secondBook);
     }
 
     @Test
     public void shouldGetByPrintYearMethodReturnEmptyEntitiesListCorrectly() {
         val books = bookDAO.getByPrintYear(2000);
 
-        assertThat(books).isNotNull().isEmpty();
+        assertThat(books)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
@@ -321,20 +391,28 @@ public class BookDAOImplTest {
 
         var bookListByIsRead = bookDAO.getByIsRead(false);
 
-        assertThat(bookListByIsRead).isNotNull().hasSize(1).contains(firstBook);
+        assertThat(bookListByIsRead)
+                .isNotNull()
+                .hasSize(1)
+                .contains(firstBook);
 
         addAllEntitiesToTheDatabase(books);
 
         bookListByIsRead = bookDAO.getByIsRead(true);
 
-        assertThat(bookListByIsRead).isNotNull().hasSize(2).contains(secondBook);
+        assertThat(bookListByIsRead)
+                .isNotNull()
+                .hasSize(2)
+                .contains(secondBook);
     }
 
     @Test
     public void shouldGetByIsReadMethodReturnEmptyEntitiesListCorrectly() {
         val books = bookDAO.getByIsRead(false);
 
-        assertThat(books).isNotNull().isEmpty();
+        assertThat(books)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
@@ -350,7 +428,10 @@ public class BookDAOImplTest {
 
         var allEntitiesFromTheDatabase = bookDAO.getAll();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(2)
+                .contains(firstBook, secondBook);
 
         addAllEntitiesToTheDatabase(books);
 
@@ -372,14 +453,19 @@ public class BookDAOImplTest {
         fourthBook.setPrintYear(secondBook.getPrintYear());
         fourthBook.setRead(secondBook.isRead());
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(4).contains(firstBook, secondBook, thirdBook, fourthBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(4)
+                .contains(firstBook, secondBook, thirdBook, fourthBook);
     }
 
     @Test
     public void shouldGetAllMethodReturnEmptyEntitiesListCorrectly() {
         val books = bookDAO.getAll();
 
-        assertThat(books).isNotNull().isEmpty();
+        assertThat(books)
+                .isNotNull()
+                .isEmpty();
     }
 
     @Test
@@ -402,7 +488,10 @@ public class BookDAOImplTest {
 
         var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(2)
+                .contains(firstBook, secondBook);
 
         secondBook.setName("shouldBeUpdated");
         secondBook.setAuthor("shouldBeUpdated");
@@ -413,7 +502,17 @@ public class BookDAOImplTest {
 
         allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(2)
+                .contains(firstBook, secondBook);
+    }
+
+    @Test
+    public void shouldThrowNullPointerExceptionWhenUpdateNullEntity() {
+        assertThatNullPointerException()
+                .isThrownBy(() -> bookDAO.update(null))
+                .withMessage("book is marked @NonNull but is null");
     }
 
     @Test
@@ -429,7 +528,10 @@ public class BookDAOImplTest {
 
         var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(2)
+                .contains(firstBook, secondBook);
 
         val updatedSecondBook = new Book();
 
@@ -443,7 +545,11 @@ public class BookDAOImplTest {
 
         allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook).doesNotContain(updatedSecondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(2)
+                .contains(firstBook, secondBook)
+                .doesNotContain(updatedSecondBook);
     }
 
     @Test
@@ -480,7 +586,10 @@ public class BookDAOImplTest {
 
         var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(2)
+                .contains(firstBook, secondBook);
 
         firstBook.setRead(false);
 
@@ -490,7 +599,17 @@ public class BookDAOImplTest {
 
         allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(2)
+                .contains(firstBook, secondBook);
+    }
+
+    @Test
+    public void shouldThrowNullPointerExceptionWhenUpdateNullListOfEntities() {
+        assertThatNullPointerException()
+                .isThrownBy(() -> bookDAO.updateAll(null))
+                .withMessage("books is marked @NonNull but is null");
     }
 
     @Test
@@ -511,7 +630,14 @@ public class BookDAOImplTest {
 
         var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(2)
+                .contains(firstBook, secondBook);
+
+        books.remove(secondBook);
+
+        books.add(null);
 
         val updatedSecondBook = new Book();
 
@@ -521,11 +647,17 @@ public class BookDAOImplTest {
         updatedSecondBook.setPrintYear(secondBook.getPrintYear());
         updatedSecondBook.setRead(secondBook.isRead());
 
-        bookDAO.updateAll(List.of(updatedSecondBook));
+        books.add(updatedSecondBook);
+
+        bookDAO.updateAll(books);
 
         allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook).doesNotContain(updatedSecondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(2)
+                .contains(firstBook, secondBook)
+                .doesNotContain(updatedSecondBook);
     }
 
     @Test
@@ -552,13 +684,25 @@ public class BookDAOImplTest {
 
         var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(1).contains(secondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(1)
+                .contains(secondBook);
 
         bookDAO.remove(secondBook);
 
         allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().isEmpty();
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .isEmpty();
+    }
+
+    @Test
+    public void shouldThrowNullPointerExceptionWhenRemoveNullEntity() {
+        assertThatNullPointerException()
+                .isThrownBy(() -> bookDAO.remove(null))
+                .withMessage("book is marked @NonNull but is null");
     }
 
     @Test
@@ -569,7 +713,10 @@ public class BookDAOImplTest {
 
         var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(1).contains(secondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(1)
+                .contains(secondBook);
 
         val updatedSecondBook = new Book();
 
@@ -583,7 +730,11 @@ public class BookDAOImplTest {
 
         allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(1).contains(secondBook).doesNotContain(updatedSecondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(1)
+                .contains(secondBook)
+                .doesNotContain(updatedSecondBook);
     }
 
     @Test
@@ -610,7 +761,9 @@ public class BookDAOImplTest {
 
         var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().isEmpty();
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .isEmpty();
 
         firstBook.setId(3);
         secondBook.setId(4);
@@ -621,7 +774,16 @@ public class BookDAOImplTest {
 
         allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().isEmpty();
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .isEmpty();
+    }
+
+    @Test
+    public void shouldThrowNullPointerExceptionWhenRemoveNullListOfEntities() {
+        assertThatNullPointerException()
+                .isThrownBy(() -> bookDAO.removeAll(null))
+                .withMessage("books is marked @NonNull but is null");
     }
 
     @Test
@@ -632,20 +794,37 @@ public class BookDAOImplTest {
 
         var allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().isEmpty();
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .isEmpty();
 
         addAllEntitiesToTheDatabase(books);
 
-        books.add(null);
-
         firstBook.setId(3);
         secondBook.setId(4);
+
+        books.remove(secondBook);
+
+        books.add(null);
+
+        val updatedSecondBook = new Book();
+
+        updatedSecondBook.setId(secondBook.getId());
+        updatedSecondBook.setName(null);
+        updatedSecondBook.setAuthor(secondBook.getAuthor());
+        updatedSecondBook.setPrintYear(secondBook.getPrintYear());
+        updatedSecondBook.setRead(secondBook.isRead());
+
+        books.add(updatedSecondBook);
 
         bookDAO.removeAll(books);
 
         allEntitiesFromTheDatabase = getAllEntitiesFromTheDatabase();
 
-        assertThat(allEntitiesFromTheDatabase).isNotNull().hasSize(2).contains(firstBook, secondBook);
+        assertThat(allEntitiesFromTheDatabase)
+                .isNotNull()
+                .hasSize(2)
+                .contains(firstBook, secondBook);
     }
 
     @Test
@@ -659,7 +838,7 @@ public class BookDAOImplTest {
     public void shouldBeCloseSessionAfterRollbackRemoveAllMethod() {
         secondBook.setName(null);
 
-        bookDAO.remove(secondBook);
+        bookDAO.removeAll(books);
 
         assertThat(session.isOpen()).isFalse();
     }

@@ -2,7 +2,6 @@ package com.qthegamep.bookmanager2.util;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,10 +16,30 @@ import org.hibernate.cfg.Configuration;
 @UtilityClass
 public class SessionUtil {
 
-    private final SessionFactory SESSION_FACTORY = buildSessionFactory();
+    private SessionFactory sessionFactory;
 
     private Session session;
     private Transaction transaction;
+
+    static {
+        buildSessionFactory();
+    }
+
+    /**
+     * This method creates new session factory if old one was closed.
+     */
+    public void createNewSessionFactory() {
+        log.info("Preparing to create new session factory");
+
+        if (sessionFactory == null || sessionFactory.isClosed()) {
+            buildSessionFactory();
+            log.info("Preparing to create new session factory was done successful");
+        } else {
+            log.info("Preparing to create new session factory was done successful! " +
+                    "New session factory was not created because it was not closed yet"
+            );
+        }
+    }
 
     /**
      * This method opens the session if session was not created or opened yet.
@@ -37,7 +56,7 @@ public class SessionUtil {
             return session;
         }
 
-        session = SESSION_FACTORY.openSession();
+        session = sessionFactory.openSession();
         log.info("Preparing to open hibernate session was done successful! New session was opened");
 
         return session;
@@ -108,20 +127,19 @@ public class SessionUtil {
         log.info("Preparing to shutdown hibernate session factory was done successful");
     }
 
-    private SessionFactory buildSessionFactory() {
+    private void buildSessionFactory() {
         log.info("Preparing to build session factory");
 
-        val sessionFactory = new Configuration().configure().buildSessionFactory();
-        log.info("Preparing to build session factory was done successful");
+        sessionFactory = new Configuration().configure().buildSessionFactory();
 
-        return sessionFactory;
+        log.info("Preparing to build session factory was done successful");
     }
 
     private void closeSessionFactory() {
         log.info("Preparing to close session factory");
 
-        if (SESSION_FACTORY != null && !SESSION_FACTORY.isClosed()) {
-            SESSION_FACTORY.close();
+        if (sessionFactory != null && !sessionFactory.isClosed()) {
+            sessionFactory.close();
             log.info("Preparing to close session factory was done successful! This session factory was closed");
         } else {
             log.info("Preparing to close session factory was done successful! " +
