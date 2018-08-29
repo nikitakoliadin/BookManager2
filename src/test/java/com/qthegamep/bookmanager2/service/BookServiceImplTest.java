@@ -354,4 +354,13 @@ public class BookServiceImplTest {
 
         verifyNoMoreInteractions(bookDAOMock);
     }
+
+    @Test
+    public void shouldThrowNullPointerExceptionWhenBookDAOIsNull() {
+        ((BookServiceImpl) bookService).setBookDAO(null);
+
+        assertThatNullPointerException()
+                .isThrownBy(() -> bookService.add(firstBook))
+                .withMessage(null);
+    }
 }

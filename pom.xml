@@ -58,7 +58,7 @@
         <junit.version>4.12</junit.version>
 
         <!-- AssertJ -->
-        <assertj.version>3.11.0</assertj.version>
+        <assertj.version>3.11.1</assertj.version>
 
         <!-- Mockito -->
         <mockito.version>2.21.0</mockito.version>
@@ -76,13 +76,16 @@
         <jaxb-runtime.version>2.4.0-b180725.0644</jaxb-runtime.version>
 
         <!-- Hibernate -->
-        <hibernate.version>5.3.5.Final</hibernate.version>
+        <hibernate.version>5.3.6.Final</hibernate.version>
 
         <!-- MySQL JDBC -->
         <mysql.jdbc.version>8.0.12</mysql.jdbc.version>
 
         <!-- H2 JDBC -->
         <h2.jdbc.version>1.4.197</h2.jdbc.version>
+
+        <!-- P6Spy -->
+        <p6spy.version>3.7.0</p6spy.version>
     </properties>
 
     <build>
@@ -305,6 +308,14 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
+        </dependency>
+
+        <!-- Proxy -->
+        <!-- https://mvnrepository.com/artifact/p6spy/p6spy -->
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>${p6spy.version}</version>
         </dependency>
     </dependencies>
 
