@@ -13,6 +13,8 @@
                                 * [BookDAOImpl.java](src/main/java/com/qthegamep/bookmanager2/dao/BookDAOImpl.java)
                             * [entity](src/main/java/com/qthegamep/bookmanager2/entity)
                                 * [Book.java](src/main/java/com/qthegamep/bookmanager2/entity/Book.java)
+                            * [formatter](src/main/java/com/qthegamep/bookmanager2/formatter)
+                                * [SQLSimpleFormatter.java](src/main/java/com/qthegamep/bookmanager2/formatter/SQLSimpleFormatter.java)
                             * [service](src/main/java/com/qthegamep/bookmanager2/service)
                                 * [BookService.java](src/main/java/com/qthegamep/bookmanager2/service/BookService.java)
                                 * [BookServiceImpl.java](src/main/java/com/qthegamep/bookmanager2/service/BookServiceImpl.java)
