@@ -41,6 +41,14 @@
         </filter>
     </appender>
 
+    <!-- P6Spy console log -->
+    <appender name="P6SPY_LOG_TO_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%yellow(%msg%n)</pattern>
+        </encoder>
+    </appender>
+
     <!-- Root logger -->
     <root level="INFO">
         <appender-ref ref="ROOT_FILE"/>
@@ -69,7 +77,6 @@
 
     <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
         <appender-ref ref="HIBERNATE_FILE_LOG"/>
-        <appender-ref ref="ROOT_FILE"/>
     </logger>
 
     <logger name="org.hibernate.hql" level="DEBUG" additivity="false">
@@ -86,5 +93,12 @@
 
     <logger name="org.hibernate.cache" level="INFO" additivity="false">
         <appender-ref ref="HIBERNATE_FILE_LOG"/>
+    </logger>
+
+    <!-- P6Spy logger -->
+    <logger name="p6spy" level="INFO" additivity="false">
+        <appender-ref ref="ROOT_FILE"/>
+        <appender-ref ref="HIBERNATE_FILE_LOG"/>
+        <appender-ref ref="P6SPY_LOG_TO_CONSOLE"/>
     </logger>
 </configuration>
