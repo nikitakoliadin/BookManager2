@@ -28,6 +28,7 @@
                     * [mysql](src/main/resources/db/mysql)
                         * [hibernate.cfg.xml](src/main/resources/db/mysql/hibernate.cfg.xml)
                         * [initDB.sql](src/main/resources/db/mysql/initDB.sql)
+                        * [spy.properties](src/main/resources/db/mysql/spy.properties)
                     * [populateDB.sql](src/main/resources/db/populateDB.sql)
                 * [logback.xml](src/main/resources/logback.xml)
         * [test](src/test)
