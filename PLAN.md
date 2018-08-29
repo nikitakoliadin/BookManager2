@@ -24,6 +24,7 @@
                     * [h2](src/main/resources/db/h2)
                         * [hibernate.cfg.xml](src/main/resources/db/h2/hibernate.cfg.xml)
                         * [initDB.sql](src/main/resources/db/h2/initDB.sql)
+                        * [spy.properties](src/main/resources/db/h2/spy.properties)
                     * [mysql](src/main/resources/db/mysql)
                         * [hibernate.cfg.xml](src/main/resources/db/mysql/hibernate.cfg.xml)
                         * [initDB.sql](src/main/resources/db/mysql/initDB.sql)
