@@ -83,6 +83,9 @@
 
         <!-- H2 JDBC -->
         <h2.jdbc.version>1.4.197</h2.jdbc.version>
+
+        <!-- P6Spy -->
+        <p6spy.version>3.7.0</p6spy.version>
     </properties>
 
     <build>
@@ -305,6 +308,14 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
+        </dependency>
+
+        <!-- Proxy -->
+        <!-- https://mvnrepository.com/artifact/p6spy/p6spy -->
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>${p6spy.version}</version>
         </dependency>
     </dependencies>
 
