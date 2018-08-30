@@ -1,7 +1,5 @@
 package com.qthegamep.bookmanager2.formatter;
 
-import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
-
 import com.qthegamep.bookmanager2.testhelper.rule.Rules;
 
 import lombok.val;
@@ -10,6 +8,7 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
 
