@@ -71,7 +71,7 @@
     <appender name="P6SPY_LOG_TO_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%yellow(%msg%n)</pattern>
+            <pattern>%blue(%msg%n)</pattern>
         </encoder>
     </appender>
 
